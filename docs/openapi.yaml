@@ -1,0 +1,146 @@
+openapi: 3.1.0
+info:
+  title: CineViet Demo API
+  version: 1.0.0
+  description: Demo-only catalogue, booking, simulated payment and explainable recommendation API.
+servers:
+  - url: /api
+paths:
+  /session:
+    get:
+      operationId: establishDemoSession
+      responses: { "200": { description: Creates or resumes an anonymous demo session and returns its CSRF token } }
+  /auth/csrf:
+    get:
+      operationId: customerCsrf
+      description: Available only when cineviet.customer-auth-enabled=true on an isolated development/staging stack.
+      responses: { "200": { description: Creates a CSRF session without creating a demo account } }
+  /auth/register:
+    post:
+      operationId: registerCustomer
+      description: Disabled by default; not a production-ready identity flow.
+      parameters:
+        - { in: header, name: X-CSRF-Token, required: true, schema: { type: string } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email: { type: string, format: email, maxLength: 254 }
+                password: { type: string, minLength: 12, maxLength: 128 }
+      responses: { "200": { description: Account session with a rotated CSRF token }, "409": { description: Email unavailable } }
+  /auth/login:
+    post:
+      operationId: loginCustomer
+      parameters:
+        - { in: header, name: X-CSRF-Token, required: true, schema: { type: string } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email: { type: string, format: email, maxLength: 254 }
+                password: { type: string, minLength: 12, maxLength: 128 }
+      responses: { "200": { description: Account session with a rotated CSRF token }, "401": { description: Invalid credentials } }
+  /auth/logout:
+    post:
+      operationId: logoutCustomer
+      parameters:
+        - { in: header, name: X-CSRF-Token, required: true, schema: { type: string } }
+      responses: { "200": { description: Session invalidated } }
+  /movies:
+    get:
+      operationId: listMovies
+      responses: { "200": { description: Published demo movies } }
+  /cinemas:
+    get:
+      operationId: listCinemas
+      responses: { "200": { description: Active demo cinemas } }
+  /showtimes:
+    get:
+      operationId: listShowtimes
+      parameters:
+        - { in: query, name: cinemaId, schema: { type: string, format: uuid } }
+        - { in: query, name: date, schema: { type: string, format: date } }
+      responses: { "200": { description: Future showtimes } }
+  /showtimes/{showtimeId}:
+    get:
+      operationId: getShowtime
+      parameters:
+        - { in: path, name: showtimeId, required: true, schema: { type: string, format: uuid } }
+      responses: { "200": { description: Showtime detail, including past booked shows }, "404": { description: Unknown showtime } }
+  /showtimes/{showtimeId}/seats:
+    get:
+      operationId: listSeats
+      parameters:
+        - { in: path, name: showtimeId, required: true, schema: { type: string, format: uuid } }
+      responses: { "200": { description: Authoritative seat state and price } }
+  /bookings/hold:
+    post:
+      operationId: holdSeats
+      parameters:
+        - { in: header, name: X-CSRF-Token, required: true, schema: { type: string } }
+        - { in: header, name: Idempotency-Key, required: true, schema: { type: string, maxLength: 200 } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [showtimeId, seatIds]
+              properties:
+                showtimeId: { type: string, format: uuid }
+                seatIds: { type: array, minItems: 1, maxItems: 8, uniqueItems: true, items: { type: string, format: uuid } }
+      responses:
+        "200": { description: Atomic five-minute hold }
+        "409": { description: Seat conflict or existing active hold }
+  /bookings/{id}/demo-payment:
+    post:
+      operationId: completeDemoPayment
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string, format: uuid } }
+        - { in: header, name: X-CSRF-Token, required: true, schema: { type: string } }
+        - { in: header, name: Idempotency-Key, required: true, schema: { type: string } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [outcome]
+              properties: { outcome: { type: string, enum: [SUCCESS, FAILED] } }
+      responses:
+        "200": { description: Confirmed booking and issued tickets }
+        "409": { description: Expired or invalid hold }
+        "422": { description: Intentional demo failure }
+  /bookings/{id}/cancel:
+    post:
+      operationId: cancelHold
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string, format: uuid } }
+        - { in: header, name: X-CSRF-Token, required: true, schema: { type: string } }
+      responses: { "200": { description: Cancelled booking } }
+  /bookings/{id}:
+    get:
+      operationId: getBooking
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string, format: uuid } }
+      responses: { "200": { description: Owner booking detail }, "404": { description: Missing or not owned } }
+  /bookings:
+    get:
+      operationId: listBookings
+      responses: { "200": { description: Current browser session's bookings } }
+  /recommendations:
+    get:
+      operationId: recommendations
+      parameters:
+        - { in: query, name: cinemaId, required: true, schema: { type: string, format: uuid } }
+        - { in: query, name: date, required: true, schema: { type: string, format: date } }
+        - { in: query, name: preferredGenres, schema: { type: string } }
+      responses: { "200": { description: Up to ten ranked films with reason codes } }

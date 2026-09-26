@@ -1,0 +1,1126 @@
+<!doctype html>
+<html lang="vi">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Kế hoạch mở rộng CineViet thành hệ thống rạp chiếu phim</title>
+  <style>
+    * {
+      box-sizing: border-box
+    }
+
+    html {
+      scroll-behavior: smooth
+    }
+
+    body {
+      margin: 0;
+      background: #f4f6f8;
+      color: #203044;
+      font: 16px/1.7 system-ui, Segoe UI, sans-serif
+    }
+
+    a {
+      color: #12599a
+    }
+
+    header {
+      background: #102b43;
+      color: white;
+      padding: 50px max(24px, calc((100vw - 1180px)/2)) 40px
+    }
+
+    header p {
+      max-width: 900px;
+      color: #d6e3ec
+    }
+
+    h1 {
+      font-size: clamp(28px, 4vw, 44px);
+      line-height: 1.18;
+      margin: 12px 0 20px
+    }
+
+    .eyebrow {
+      letter-spacing: .13em;
+      font-size: 12px;
+      text-transform: uppercase;
+      color: #9bd2dd
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 230px minmax(0, 1fr);
+      gap: 32px;
+      max-width: 1240px;
+      margin: auto;
+      padding: 32px 24px
+    }
+
+    nav {
+      position: sticky;
+      top: 20px;
+      align-self: start;
+      max-height: 92vh;
+      overflow: auto
+    }
+
+    nav a {
+      display: block;
+      padding: 7px 0;
+      font-size: 14px;
+      text-decoration: none;
+      color: #425870
+    }
+
+    main {
+      min-width: 0
+    }
+
+    section {
+      background: white;
+      padding: 30px;
+      margin-bottom: 24px;
+      border: 1px solid #dee5eb;
+      border-radius: 10px;
+      scroll-margin-top: 20px
+    }
+
+    h2 {
+      font-size: 25px;
+      line-height: 1.3;
+      margin: 0 0 20px;
+      color: #102b43
+    }
+
+    h3 {
+      font-size: 18px;
+      margin: 26px 0 10px
+    }
+
+    p {
+      margin: 12px 0
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      font-size: 14px;
+      line-height: 1.55
+    }
+
+    th,
+    td {
+      padding: 12px;
+      text-align: left;
+      vertical-align: top;
+      border: 1px solid #d8e0e7
+    }
+
+    th {
+      background: #eaf1f7;
+      color: #173d5d
+    }
+
+    tbody tr:nth-child(even) {
+      background: #fafcfd
+    }
+
+    .table-wrap {
+      overflow: auto;
+      margin: 20px 0
+    }
+
+    pre {
+      background: #f1f4f7;
+      border: 1px solid #d8e0e7;
+      border-radius: 6px;
+      padding: 20px;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      font: 13px/1.7 ui-monospace, Consolas, monospace
+    }
+
+    details {
+      border-top: 1px solid #d8e0e7;
+      padding: 18px 0
+    }
+
+    summary {
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 19px
+    }
+
+    summary span {
+      color: #176472;
+      margin-right: 10px
+    }
+
+    details p {
+      font-size: 15px
+    }
+
+    .check {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      color: #35536d;
+      font-size: 14px;
+      padding: 8px 0
+    }
+
+    input[type=checkbox] {
+      width: 20px;
+      height: 20px;
+      accent-color: #136775;
+      flex-shrink: 0
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap
+    }
+
+    button {
+      cursor: pointer;
+      font: 600 14px system-ui;
+      border: 1px solid #becdd9;
+      background: white;
+      color: #163a55;
+      padding: 10px 16px;
+      border-radius: 6px
+    }
+
+    button:hover {
+      background: #edf4f8
+    }
+
+    .progress {
+      font-size: 13px;
+      color: #36596c;
+      margin-top: 20px
+    }
+
+    li {
+      margin: 8px 0
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px 20px 40px;
+      color: #63798b;
+      font-size: 13px
+    }
+
+    @media(max-width:900px) {
+      .layout {
+        grid-template-columns: 1fr;
+        gap: 16px
+      }
+
+      nav {
+        position: static;
+        max-height: 220px;
+        border-bottom: 1px solid #ccc;
+        padding-bottom: 16px
+      }
+
+      section {
+        padding: 20px
+      }
+
+      header {
+        padding: 32px 24px
+      }
+
+      th,
+      td {
+        min-width: 140px
+      }
+    }
+
+    @media print {
+      body {
+        background: white;
+        font-size: 11pt
+      }
+
+      .layout {
+        display: block;
+        padding: 0
+      }
+
+      nav,
+      .actions,
+      button,
+      .progress,
+      .check {
+        display: none
+      }
+
+      header {
+        background: white;
+        color: black;
+        padding: 0 0 20px
+      }
+
+      header p,
+      header .eyebrow {
+        color: #333
+      }
+
+      section {
+        border: 0;
+        border-radius: 0;
+        padding: 12px 0
+      }
+
+      h2,
+      h3,
+      summary {
+        break-after: avoid
+      }
+
+      tr {
+        break-inside: avoid
+      }
+
+      pre {
+        font-size: 9pt
+      }
+
+      a {
+        color: black;
+        text-decoration: none
+      }
+
+      .table-wrap {
+        overflow: visible
+      }
+
+      footer {
+        display: none
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="eyebrow">CineViet · Kế hoạch mở rộng v2 · 24 09 2026</div>
+    <h1>Kế hoạch xây dựng hệ thống rạp chiếu phim CineViet</h1>
+    <p>Khách hàng · Quản trị rạp · Đặt vé an toàn · Thanh toán · Vé QR · Vận hành. Tham khảo luồng Beta Cinemas, giữ thương hiệu riêng.</p>
+    <div class="actions"><button id="print">In hoặc lưu PDF</button><button id="expand">Mở tất cả giai đoạn</button>
+    </div>
+  </header>
+  <div class="layout">
+    <nav aria-label="Mục lục"><a href="#scope">01 Mục tiêu và phạm vi</a><a href="#beta">02 Tham khảo Beta Cinemas</a><a
+        href="#architecture">03 Kiến trúc và repository</a><a href="#contract">04 Hợp đồng nghiệp vụ bắt buộc</a><a
+        href="#database">05 Dữ liệu và migration</a><a href="#screens">06 Màn hình và API</a><a href="#recommend">07
+        Vai trò và trải nghiệm</a><a href="#phases">08 Lộ trình triển khai</a><a href="#tests">09 Kiểm thử và lệnh
+        nghiệm thu</a><a href="#codex">10 Prompt giao việc cho Codex</a><a href="#done">11 Điều kiện bàn giao</a><a
+        href="#sources">12 Nguồn và giới hạn</a>
+      <div class="progress" id="progress" aria-live="polite"></div>
+    </nav>
+    <main>
+      <section id="scope">
+        <h2>01 Mục tiêu và phạm vi</h2>
+        <p><strong>Giả định sản phẩm:</strong> website rạp chiếu phim và đặt vé tại rạp, không phát trực tuyến phim.
+          Đây là kế hoạch mở rộng v2, thay cho giới hạn «đúng hai tính năng» của kế hoạch v1; không có nghĩa các hạng mục
+          mới đã được lập trình. CineViet giữ nhận diện riêng, không đại diện cho Beta Cinemas.</p>
+        <p><strong>Hiện trạng repository:</strong> đã có demo React/TypeScript, Spring Boot, PostgreSQL, F01 giữ ghế và
+          thanh toán mô phỏng, F02 gợi ý phim. Chưa có đăng nhập sản xuất, quản trị, cổng thanh toán thật, quét vé; một
+          số cổng kiểm thử PostgreSQL/Docker và callback thanh toán của v1 vẫn chưa có bằng chứng đạt. Phải kiểm tra và
+          hoàn thiện phần nền trước khi gọi hệ thống là sẵn sàng vận hành.</p>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Nhóm</th>
+                <th>Bản ra mắt tối thiểu</th>
+                <th>Giai đoạn sau</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Khách hàng</td>
+                <td>Xem phim/rạp/lịch chiếu, tạo tài khoản, chọn ghế, xem giá, đặt vé, thanh toán, nhận và tra cứu vé QR.</td>
+                <td>Đánh giá, bình luận, mạng xã hội, đa ngôn ngữ.</td>
+              </tr>
+              <tr>
+                <td>Vận hành</td>
+                <td>Quản lý phim, rạp, phòng, ghế, suất chiếu, giá; phân quyền; quét vé; tra cứu đơn và báo cáo cơ bản.</td>
+                <td>POS tại quầy, quản lý kho và chuỗi nhượng quyền.</td>
+              </tr>
+              <tr>
+                <td>Thanh toán</td>
+                <td>MoMo sandbox với IPN xác thực và VietQR qua ngân hàng/đối tác có webhook hoặc truy vấn giao dịch
+                  đáng tin cậy. Chỉ bật thu tiền thật sau khi có merchant, tài khoản nhận tiền, chính sách hoàn tiền,
+                  kiểm thử và phê duyệt triển khai.</td>
+                <td>Thêm phương thức khác, trả góp, ví nội bộ.</td>
+              </tr>
+              <tr>
+                <td>Tăng trưởng</td>
+                <td>Giữ tính năng gợi ý F02 hiện có, không để nó chặn luồng mua vé chính.</td>
+                <td>Voucher, combo, điểm thành viên, email marketing và cá nhân hóa nâng cao.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p><strong>Hai chế độ tách biệt:</strong> DEMO dùng dữ liệu hư cấu và thanh toán mô phỏng, có nhãn rõ trên mọi
+          màn hình liên quan. PRODUCTION chỉ dùng dữ liệu, ảnh, suất chiếu, giá và tài khoản merchant đã được chủ dự án
+          phê duyệt. Không bao giờ trộn hai chế độ hoặc dùng dữ liệu DEMO để nhận tiền thật.</p>
+        <p><strong>Đã chốt:</strong> chuẩn bị mở bán thật với MoMo và VietQR. <strong>Chưa có:</strong> pháp nhân/merchant
+          MoMo, tài khoản ngân hàng nhận VietQR, đối tác thông báo giao dịch, danh sách rạp/phòng/sơ đồ ghế, quy tắc
+          giá, quyền nội dung phim, chính sách hủy/hoàn và kênh hỗ trợ. Thiếu đầu vào thì tiếp tục phần sandbox an
+          toàn, không tự kích hoạt thu tiền hoặc công bố bán vé. Chi tiết hợp đồng tích hợp ở
+          <code>docs/payment-momo-vietqr.md</code>.</p>
+      </section>
+      <section id="beta">
+        <h2>02 Tham khảo Beta Cinemas</h2>
+        <p>Nguồn bắt đầu: <a href="https://www.betacinemas.vn/home.htm">Beta Cinemas</a>. Trang công khai được lập chỉ
+          mục cho thấy các mục phim, lịch chiếu theo rạp, rạp, giá vé, ưu đãi, thành viên và nút mua vé. Đây là tham
+          chiếu chức năng, không phải giấy phép sao chép giao diện, logo, nội dung hoặc dữ liệu.</p>
+        <p>Kiểm tra ngày 24/09/2026: công cụ không truy cập trực tiếp được trang chủ (HTTP 403); các quan sát trên đến
+          từ trang Beta được lập chỉ mục. Không khẳng định đó là giao diện hay lịch chiếu hiện thời. Ghi rõ nguồn, ngày
+          và phần chưa xác minh trong docs/reference-beta.md.</p>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Bước</th>
+                <th>Codex thực hiện</th>
+                <th>Bằng chứng</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>B1 Khảo sát</td>
+                <td>Mở trang công khai khi truy cập được; ghi điều hướng, thẻ phim và bước đặt vé.</td>
+                <td>docs/reference-beta.md: URL, thời điểm, quan sát và phần chưa xác minh.</td>
+              </tr>
+              <tr>
+                <td>B2 Giao diện</td>
+                <td>Vận dụng luồng tìm phim → chọn rạp/ngày/suất → chọn ghế → thanh toán; thiết kế nhận diện riêng.</td>
+                <td>Wireframe desktop/mobile; phân biệt quan sát với đề xuất.</td>
+              </tr>
+              <tr>
+                <td>B3 Metadata</td>
+                <td>Dùng thông tin được phép sử dụng hoặc CSV người dùng cung cấp; lưu URL và thời điểm.</td>
+                <td>data/movies.reference.csv và provenance.json.</td>
+              </tr>
+              <tr>
+                <td>B4 Bị chặn</td>
+                <td>Không vượt CAPTCHA/403. Tiếp tục với phim hư cấu có nhãn DEMO, không dùng lịch Beta làm hàng tồn kho.</td>
+                <td>Dự án chạy offline; không khẳng định danh sách đang chiếu hiện tại.</td>
+              </tr>
+              <tr>
+                <td>B5 Duyệt</td>
+                <td>Kiểm tra tên, thể loại, phút, tuổi và quyền ảnh. Không tự ghi đè xung đột.</td>
+                <td>Import dry-run báo lỗi từng dòng; chỉ công bố dữ liệu đã duyệt.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Ví dụ cấu trúc: trang <a
+            href="https://www.betacinemas.vn/chi-tiet-phim.htm?gf=4e5ce0b0-2ffc-4d44-bdc6-69ed1385a492">Thỏ Gà Du Xuân
+            Đại Náo Địa Đạo</a> được lập chỉ mục với thể loại Hoạt hình/Phiêu lưu, 89 phút. Đây là dữ liệu lịch sử,
+          không xác nhận đang chiếu. Không tải poster mặc định; dùng ảnh giữ chỗ khi chưa xác định quyền sử dụng.</p>
+      </section>
+      <section id="architecture">
+        <h2>03 Kiến trúc và repository</h2>
+        <p><strong>Stack kế thừa:</strong> React + TypeScript; Java 21 + Spring Boot; PostgreSQL; Docker Compose cho
+          local. Dùng backend đơn khối chia mô-đun, không tách microservice khi chưa có nhu cầu đo được. Gợi ý vẫn là
+          module Java. PostgreSQL giữ quyền sở hữu ghế; cache/Redis chỉ bổ sung sau khi có số đo, không làm nguồn sự
+          thật. Khóa phiên bản và migration; môi trường staging/production có bí mật và dữ liệu riêng.</p>
+        <pre><code>cineviet/
+  frontend/                  # React TypeScript
+  backend/                   # Spring Boot, Flyway và kiểm thử
+    src/main/.../identity/
+    src/main/.../catalog/
+    src/main/.../cinema/
+    src/main/.../scheduling/
+    src/main/.../pricing/
+    src/main/.../booking/
+    src/main/.../payment/
+    src/main/.../ticket/
+    src/main/.../operations/
+    src/main/.../recommendation/
+    src/main/resources/db/migration/
+  data/                      # CSV, provenance, synthetic fixtures
+  infra/                     # compose.yaml và .env.example
+  tests/e2e/                 # Playwright
+  tests/load/                # Concurrency và tải
+  docs/                      # Quyết định, OpenAPI, schema, test reports
+  README.md</code></pre>
+        <p>Frontend gọi API theo hợp đồng OpenAPI; backend kiểm quyền ở từng nghiệp vụ, tính tiền và hạn giữ. Dùng
+          cookie HttpOnly/SameSite (Secure khi chạy HTTPS/production), CSRF cho mutation phù hợp, TLS, giới hạn tần
+          suất và MFA cho quản trị.
+          Thanh toán qua adapter nhà cung cấp và trang thanh toán do họ lưu trữ; không thu thập/sao lưu dữ liệu thẻ.
+          Công việc gửi thông báo dùng outbox/job có thể thử lại, không gửi trong transaction giữ ghế. Theo dõi log,
+          metric, trace và sao lưu/khôi phục ở staging trước khi mở bán.</p>
+      </section>
+      <section id="contract">
+        <h2>04 Hợp đồng nghiệp vụ bắt buộc</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Quy tắc</th>
+                <th>Đặc tả</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Đơn và hạn</td>
+                <td>1–8 ghế trong một suất. expiresAt = min(clock_timestamp sau khi lấy khóa + 5 phút, startsAt);
+                  thời hạn thực tế phải phù hợp thời gian thanh toán của nhà cung cấp. now ≥ expiresAt là hết hạn.
+                  UTC trong DB; Asia/Ho_Chi_Minh trên UI.</td>
+              </tr>
+              <tr>
+                <td>Booking.status</td>
+                <td>HELD → PAYMENT_PENDING → CONFIRMED hoặc CANCELLED/EXPIRED. CONFIRMED chỉ đi vào quy trình
+                  REFUND_PENDING → REFUNDED khi chính sách cho phép; không hủy trực tiếp bằng cách sửa trạng thái.
+                  Mọi chuyển trạng thái có log và điều kiện tiền/ghế tương ứng.</td>
+              </tr>
+              <tr>
+                <td>Ghế theo suất</td>
+                <td>AVAILABLE/BLOCKED không có ownerBookingId; HELD/SOLD có ownerBookingId.
+                  PK(showtimeId,seatId). Ghế BLOCKED do nhân viên có quyền tạo với lý do; không bán.</td>
+              </tr>
+              <tr>
+                <td>PaymentAttempt</td>
+                <td>outcome=PENDING/SUCCESS/FAILED; resolution=NONE/REFUND_REQUIRED/REFUND_PENDING/REFUNDED.
+                  Mỗi lần thử có mã tham chiếu riêng; không trộn trạng thái thanh toán với trạng thái đơn.</td>
+              </tr>
+              <tr>
+                <td>Nguyên tử</td>
+                <td>Giữ đủ tất cả ghế hoặc rollback. Khi đã xác thực callback/IPN, cập nhật payment, booking, ghế
+                  SOLD và tickets trong cùng transaction. Không gọi cổng thanh toán trong transaction DB.</td>
+              </tr>
+              <tr>
+                <td>Callback muộn</td>
+                <td>Ghi tiền SUCCESS, REFUND_REQUIRED; không phát hành vé hoặc lấy ghế của đơn khác. Đưa vào hàng đợi
+                  đối soát và hoàn theo chính sách, có cảnh báo cho vận hành.</td>
+              </tr>
+              <tr>
+                <td>Thử lại</td>
+                <td>FAILED còn hạn được tạo attempt mới. PENDING phải đối soát, không tạo attempt song song; URL
+                  trình duyệt quay về chỉ hiển thị trạng thái, không tự xác nhận đã thu tiền.</td>
+              </tr>
+              <tr>
+                <td>Chống lặp</td>
+                <td>Idempotency-Key theo account+endpoint. Cùng key/body trả kết quả cũ; khác body trả 409. Callback
+                  unique theo provider/eventId và providerTxnId; kiểm chữ ký, amount/currency/order trước mọi thay đổi.
+                  Callback lặp chỉ trả kết quả đã xử lý.</td>
+              </tr>
+              <tr>
+                <td>Giới hạn tài khoản</td>
+                <td>Giới hạn số hold còn hiệu lực theo tài khoản/phiên và IP để chống gom ghế. Khóa tài khoản khi tạo
+                  và ràng buộc DB cho chính sách một hold đang hoạt động trong bản đầu; áp dụng rate limit.</td>
+              </tr>
+              <tr>
+                <td>Vé</td>
+                <td>Một Ticket/BookingItem; QR chứa token ngẫu nhiên, không chứa thông tin cá nhân hoặc mã đơn dễ
+                  đoán. Trang vé kiểm tra chủ đơn. Check-in xác thực token, suất/rạp/thời gian và chỉ thành công một
+                  lần; vé đã hoàn bị vô hiệu.</td>
+              </tr>
+              <tr>
+                <td>Hoàn vé</td>
+                <td>Chỉ yêu cầu theo chính sách được chủ dự án duyệt; kiểm thời gian suất và check-in. Hoàn tiền qua
+                  provider hoặc quy trình thủ công có phê duyệt, mã đối soát và audit. Không mở bán lại ghế đã hoàn
+                  nếu chưa có quy tắc rõ và transaction đảm bảo nhất quán.</td>
+              </tr>
+              <tr>
+                <td>Lịch chiếu và giá</td>
+                <td>Không chồng phòng bao gồm thời gian dọn phòng; không bán suất chưa công bố/đã bắt đầu. Giá theo
+                  rạp, ngày/giờ, loại ghế và chính sách được khóa thành snapshot trên BookingItem. Thay đổi bảng giá
+                  không sửa đơn đã giữ.</td>
+              </tr>
+              <tr>
+                <td>Phân quyền</td>
+                <td>Khách chỉ thấy đơn mình; nhân viên chỉ thao tác rạp được phân công; quản lý rạp chỉ cấu hình rạp
+                  mình; super admin có quyền toàn hệ thống. Mọi API kiểm quyền và ghi audit thao tác nhạy cảm.</td>
+              </tr>
+              <tr>
+                <td>Gợi ý</td>
+                <td>Chỉ lịch sử CONFIRMED trước truy vấn; mỗi phim tính một lần, không nhân theo số ghế.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <h3>Thứ tự khóa và thời gian</h3>
+        <p>Tạo mới: khóa Account, tạo Booking rồi khóa ShowtimeSeat theo seatId tăng dần. Đơn đã tồn tại: khóa Booking →
+          ShowtimeSeat theo thứ tự → PaymentAttempt khi cần. Không khóa một Booking khác sau khi đã khóa ghế. Worker
+          giải phóng ghế còn thuộc đơn hết hạn, nhưng không được đổi payment PENDING thành FAILED khi chưa đối soát.
+          Request giữ mới không tự thu hồi ghế của một đơn khác; chấp nhận chờ một chu kỳ quét để bán lại.</p>
+        <p>Dùng clock_timestamp() sau khi lấy đủ khóa để quyết định còn hạn; không dùng thời gian bắt đầu transaction đã
+          bị chờ khóa. Giao dịch ngắn, không gọi cổng trong transaction; retry deadlock có giới hạn/backoff và không
+          gây side effect ngoài DB trong đoạn retry. Giữa hold, redirect, IPN, hết hạn và hoàn vé phải có sơ đồ trạng
+          thái và test cho mọi cặp sự kiện chạy đồng thời.</p>
+      </section>
+      <section id="database">
+        <h2>05 Dữ liệu và migration</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Bảng</th>
+                <th>Trường và ràng buộc</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>accounts</td>
+                <td>id, email unique đã chuẩn hóa, password_hash, email_verified_at, status, preferred_genres;
+                  tài khoản demo tách biệt production. Phiên/refresh token có khả năng thu hồi.</td>
+              </tr>
+              <tr>
+                <td>roles / memberships</td>
+                <td>Role CUSTOMER/STAFF/CINEMA_MANAGER/SUPER_ADMIN; membership gắn account với cinema_id, unique
+                  hợp lý, không tin role do client gửi. Lưu lịch sử thay đổi quyền.</td>
+              </tr>
+              <tr>
+                <td>movies</td>
+                <td>id, source_key unique nullable, title, genres, duration_minutes, release_date, age_rating, origin,
+                  visibility, source_url, fetched_at, verified_at, poster_path, rights_note.</td>
+              </tr>
+              <tr>
+                <td>cinemas / rooms / seats</td>
+                <td>Cinema có địa chỉ, múi giờ, trạng thái; Room.cinema_id, loại màn hình và thời gian dọn phòng;
+                  Seat unique(room_id,row_label,number), loại ghế và trạng thái bảo trì.</td>
+              </tr>
+              <tr>
+                <td>showtimes</td>
+                <td>movie_id, room_id, starts_at, ends_at, status; unique(id,room_id). Không chồng phòng kể cả khoảng
+                  dọn phòng; chỉ suất PUBLISHED mới được bán. Giá lấy từ price_rules khi tạo hold.</td>
+              </tr>
+              <tr>
+                <td>price_rules</td>
+                <td>cinema/room/seat_type/day/time/effective interval, amount_vnd, priority, trạng thái duyệt.
+                  Không có hai quy tắc cùng ưu tiên áp dụng một ghế/suất; lưu snapshot giá trên item.</td>
+              </tr>
+              <tr>
+                <td>showtime_seats</td>
+                <td>PK(showtime_id,seat_id); room_id, status, owner_booking_id. FK ghép đảm bảo Seat/Showtime cùng
+                  phòng.</td>
+              </tr>
+              <tr>
+                <td>bookings / booking_items</td>
+                <td>Booking một showtime_id; Item FK(booking_id,showtime_id), FK(showtime_id,seat_id), price_vnd,
+                  unique(booking_id,seat_id).</td>
+              </tr>
+              <tr>
+                <td>payment_attempts</td>
+                <td>provider, provider_txn_id, amount_vnd, currency=VND, outcome, resolution, attempt_reference,
+                  created_at/confirmed_at. Unique(provider,provider_txn_id) khi đã biết.</td>
+              </tr>
+              <tr>
+                <td>tickets</td>
+                <td>booking_item_id unique, qr_token_hash unique, status, issued_at, checked_in_at. Token do backend
+                  tạo khi xác nhận; chỉ lưu hash nếu luồng xác minh cho phép.</td>
+              </tr>
+              <tr>
+                <td>payment_events</td>
+                <td>provider_event_id unique theo provider; payload_hash, received_at, processed_at. Không lưu khóa/chữ
+                  ký bí mật.</td>
+              </tr>
+              <tr>
+                <td>idempotency_records</td>
+                <td>unique(account_id,endpoint,key), request_hash, response/status; ghi cùng transaction nghiệp vụ.</td>
+              </tr>
+              <tr>
+                <td>refunds / check_ins / audit_logs</td>
+                <td>Refund gắn payment attempt và quyết định; CheckIn unique(ticket_id), staff_id, cinema_id;
+                  AuditLog ghi actor, hành động, đối tượng, trước/sau đã lọc dữ liệu nhạy cảm, requestId, thời điểm.</td>
+              </tr>
+              <tr>
+                <td>outbox_events</td>
+                <td>Thông báo vé/hoàn tiền và sự kiện nghiệp vụ ghi cùng transaction; worker phát lại an toàn, không
+                  làm mất vé nếu email/SMS lỗi.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <h3>CSV phim</h3>
+        <pre><code>sourceKey,title,genres,durationMinutes,releaseDate,ageRating,sourceUrl,fetchedAt,verifiedAt,origin,visibility,posterPath,rightsNote</code></pre>
+        <p>genres phân tách bằng |; thời lượng là phút nguyên dương. Import có dry-run, lỗi theo dòng, log và upsert
+          theo sourceKey; chạy hai lần không nhân bản. origin=BETA_REFERENCE/SYNTHETIC; visibility=DRAFT/PUBLISHED.
+          Không tự công bố tuổi chưa xác minh như dữ liệu đặt vé thật.</p>
+        <p>Bộ import CineViet bổ sung các cột country, slug, tagline, synopsis, palette, artworkLabel và featured để
+          đáp ứng schema phim hiện có. Lệnh offline mặc định dry-run; chỉ ghi khi đặt apply=true. Dữ liệu DEMO trong CSV
+          không đồng nghĩa đã kiểm chứng trên PostgreSQL hoặc đã được nhập vào cơ sở dữ liệu đang chạy.</p>
+        <p><strong>Seed demo:</strong> tối thiểu 12 phim hư cấu ở 4 thể loại, 2 rạp × 2 phòng × 40 ghế, 24 suất tương
+          lai và 60 tài khoản để kiểm thử tranh chấp; có nhân viên, quản lý, quy tắc giá và ghế BLOCKED. DEMO_BASE_DATE
+          cấu hình được. Giá là số nguyên VND. Không sao chép seed demo sang production; dữ liệu tổng hợp không chứng
+          minh chất lượng cá nhân hóa.</p>
+      </section>
+      <section id="screens">
+        <h2>06 Màn hình và API</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Route UI</th>
+                <th>Trạng thái bắt buộc</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>/</td>
+                <td>Chọn rạp/ngày, phim đang/sắp chiếu, lịch chiếu, tìm kiếm và tin ưu đãi (nếu có, không tự áp giá);
+                  loading/empty/error/retry.</td>
+              </tr>
+              <tr>
+                <td>/movies/:id</td>
+                <td>Thông tin, trailer/ảnh có quyền sử dụng, phân loại tuổi, rạp/ngày/suất;
+                  phim ẩn trả 404.</td>
+              </tr>
+              <tr>
+                <td>/cinemas/:id và /showtimes</td>
+                <td>Địa chỉ rạp, phòng, tiện ích, lịch chiếu; bộ lọc phim/rạp/ngày và giá tham khảo.</td>
+              </tr>
+              <tr>
+                <td>/showtimes/:id/seats</td>
+                <td>Trống/đang chọn/đã giữ/đã bán/bị chặn; màu + ký hiệu, chú giải, bàn phím và tổng tiền server.</td>
+              </tr>
+              <tr>
+                <td>/checkout/:bookingId</td>
+                <td>Giá chốt, ghế, hạn giữ theo server, điều khoản; chọn phương thức thanh toán, khôi phục trạng thái
+                  sau reload, hiển thị đang chờ/không rõ kết quả thay vì báo thành công giả.</td>
+              </tr>
+              <tr>
+                <td>/demo-payment/:attemptId</td>
+                <td>Chỉ có ở DEMO; thành công/thất bại/pending để kiểm thử, không có dữ liệu thẻ và không xuất hiện
+                  trong production.</td>
+              </tr>
+              <tr>
+                <td>/bookings/:id</td>
+                <td>Trạng thái đơn/thanh toán/hoàn tiền tách biệt; chỉ chủ đơn xem được, có hướng xử lý khi lỗi.</td>
+              </tr>
+              <tr>
+                <td>/bookings/:id/tickets</td>
+                <td>Chỉ chủ đơn CONFIRMED có vé còn hiệu lực; QR không hiển thị cho người khác; in/tải theo chính sách.</td>
+              </tr>
+              <tr>
+                <td>/recommendations</td>
+                <td>Sở thích, rạp/ngày, Top 10, lý do và fallback; giữ chức năng hiện có, không tự giữ ghế.</td>
+              </tr>
+              <tr>
+                <td>/login, /register, /account và /my-bookings</td>
+                <td>Đăng nhập/khôi phục tài khoản, thông tin cá nhân và đơn của chính mình; không dùng tài khoản demo
+                  trong production.</td>
+              </tr>
+              <tr>
+                <td>/admin/*</td>
+                <td>Phim, rạp/phòng/ghế, suất, giá, nhân sự/quyền, đơn/hoàn tiền và báo cáo; quyền giới hạn theo rạp,
+                  xác nhận thao tác nguy hiểm và có audit.</td>
+              </tr>
+              <tr>
+                <td>/staff/check-in</td>
+                <td>Quét hoặc nhập token vé, hiển thị đúng rạp/suất/ghế, ngăn quét lặp; khi mất mạng báo lỗi và
+                  thử lại, không xác nhận offline khi chưa kiểm chứng trạng thái vé.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>API</th>
+                <th>Kiểm tra và kết quả</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>POST /api/auth/login, /logout, /register</td>
+                <td>Xác minh email/phiên, rate limit, thu hồi phiên; MFA bắt buộc cho vai trò quản trị.</td>
+              </tr>
+              <tr>
+                <td>GET /api/movies</td>
+                <td>Bộ lọc, page/size giới hạn; chỉ PUBLISHED.</td>
+              </tr>
+              <tr>
+                <td>GET /api/cinemas, /api/showtimes</td>
+                <td>Lọc rạp/ngày/phim; chỉ trả rạp và suất đã công bố, còn hiệu lực.</td>
+              </tr>
+              <tr>
+                <td>GET /api/showtimes/{id}/seats</td>
+                <td>Suất chưa bắt đầu; trả seatId/status/serverTime, không lộ chủ ghế khác.</td>
+              </tr>
+              <tr>
+                <td>POST /api/bookings</td>
+                <td>showtimeId, seatIds, Idempotency-Key; 201 HELD hoặc 409 tranh chấp; tính tiền ở server.</td>
+              </tr>
+              <tr>
+                <td>POST /api/bookings/{id}/cancel</td>
+                <td>Chủ đơn, chỉ HELD chưa thanh toán; không trả ghế của đơn khác. Đơn CONFIRMED dùng quy trình refund
+                  riêng.</td>
+              </tr>
+              <tr>
+                <td>POST /api/bookings/{id}/payments</td>
+                <td>Chủ đơn, còn hạn, không attempt PENDING; DEMO trả URL mô phỏng, production trả URL hosted checkout
+                  từ adapter provider. Không lộ secret.</td>
+              </tr>
+              <tr>
+                <td>GET/POST /api/payments/{provider}/notify</td>
+                <td>Phương thức đúng hợp đồng từng provider; verify chữ ký/checksum trên dữ liệu gốc, mã đơn,
+                  amount/currency, tình trạng và chống replay. Chỉ server-to-server cập nhật đơn.</td>
+              </tr>
+              <tr>
+                <td>GET /api/payments/return và /api/bookings/{id}</td>
+                <td>Return URL chỉ điều hướng/trình bày; API đơn là nguồn trạng thái sau khi IPN hoặc đối soát.
+                  Trả PENDING khi chưa xác minh, không tin redirect.</td>
+              </tr>
+              <tr>
+                <td>POST /api/bookings/{id}/refund-requests</td>
+                <td>Kiểm chính sách, thời điểm, quyền và check-in; ghi yêu cầu, không tự tuyên bố đã hoàn tiền.</td>
+              </tr>
+              <tr>
+                <td>POST /api/staff/check-ins</td>
+                <td>Nhân viên đúng rạp, token hợp lệ, vé chưa dùng/chưa hoàn; idempotent, ghi người và giờ quét.</td>
+              </tr>
+              <tr>
+                <td>/api/admin/movies|cinemas|rooms|showtimes|prices</td>
+                <td>CRUD có validation, phân quyền theo rạp, optimistic version, audit; không xóa cứng dữ liệu đã có
+                  đơn.</td>
+              </tr>
+              <tr>
+                <td>/api/admin/orders|refunds|reports|staff</td>
+                <td>Tìm/đối soát, hoàn tiền có phê duyệt, xuất báo cáo giới hạn quyền và quản lý phân công nhân viên.</td>
+              </tr>
+              <tr>
+                <td>GET /api/recommendations</td>
+                <td>cinemaCode/date/limit≤10; items(movieId,score,reasonCode,reasonText), mode.</td>
+              </tr>
+              <tr>
+                <td>PUT /api/me/preferences</td>
+                <td>Thể loại hợp lệ; cập nhật sở thích F02 của chính người dùng.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Lỗi JSON thống nhất: code, message, requestId, details. OpenAPI phải khớp backend/frontend. Không dùng câu
+          thông báo làm mã điều khiển. Phân biệt lỗi nghiệp vụ 409 với 5xx trong số liệu. Mỗi màn hình có trạng thái
+          loading, empty, error, disabled, success và interrupted; ưu tiên di động 390 px, desktop 1440 px, bàn phím,
+          focus rõ, phóng chữ 200%, giảm chuyển động và WCAG 2.2 AA.</p>
+      </section>
+      <section id="recommend">
+        <h2>07 Vai trò và trải nghiệm</h2>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Vai trò</th><th>Công việc được phép</th><th>Ranh giới bắt buộc</th></tr></thead>
+            <tbody>
+              <tr><td>Khách chưa đăng nhập</td><td>Xem phim, rạp, lịch, giá tham khảo và tìm kiếm.</td>
+                <td>Đăng nhập/đăng ký trước khi giữ ghế ở bản đầu; không thấy thông tin đơn người khác.</td></tr>
+              <tr><td>Khách hàng</td><td>Giữ ghế, thanh toán, xem vé/lịch sử, gửi yêu cầu hỗ trợ hoặc hoàn vé.</td>
+                <td>Chỉ sửa hồ sơ và xem đơn của mình; không tự sửa số tiền/trạng thái.</td></tr>
+              <tr><td>Nhân viên rạp</td><td>Quét vé, tra cứu đơn tối thiểu cần thiết và ghi nhận sự cố.</td>
+                <td>Chỉ rạp được phân công; không xem báo cáo toàn hệ thống hoặc tự hoàn tiền.</td></tr>
+              <tr><td>Quản lý rạp</td><td>Phòng/ghế, lịch, giá trong rạp, ca trực, đơn, đề xuất hoàn vé và báo cáo rạp.</td>
+                <td>Không thay đổi rạp khác; thao tác nhạy cảm cần audit/phê duyệt.</td></tr>
+              <tr><td>Super admin</td><td>Danh mục phim, toàn hệ thống, phân quyền, cấu hình và báo cáo tổng hợp.</td>
+                <td>MFA; nguyên tắc ít quyền nhất, không đọc secret thanh toán dưới dạng rõ.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <h3>Ba hành trình phải hoàn chỉnh</h3>
+        <ol>
+          <li>Khách: tìm phim/rạp/ngày → chọn suất/ghế → xem giá và hạn giữ → thanh toán → chờ xác nhận → nhận vé QR →
+            xem lại đơn hoặc yêu cầu hỗ trợ.</li>
+          <li>Quản lý: cấu hình rạp/phòng/ghế → nhập/công bố phim → tạo suất không chồng giờ → duyệt giá → theo dõi
+            đơn, giao dịch lỗi và báo cáo.</li>
+          <li>Nhân viên: chọn rạp/ca → quét QR → xác minh vé đúng rạp/suất, chưa dùng/chưa hoàn → ghi check-in duy nhất
+            hoặc thông báo lý do từ chối.</li>
+        </ol>
+        <h3>F02 và tính năng mở rộng</h3>
+        <p>Giữ gợi ý F02 hiện có: lọc phim PUBLISHED còn suất/ghế theo rạp/ngày; kết hợp sở thích và lịch sử phim đã
+          CONFIRMED, điểm cosine/phổ biến, tối đa 10 kết quả có lý do. Test ví dụ A,C,B của v1 vẫn phải đạt. Gợi ý
+          không tự giữ ghế và không phải điều kiện để checkout hoạt động. Sau khi hệ thống bán vé ổn định mới cân nhắc
+          voucher, combo, điểm thành viên, email/SMS marketing, đánh giá hoặc ứng dụng di động.</p>
+      </section>
+      <section id="phases">
+        <h2>08 Lộ trình triển khai</h2>
+        <p>Triển khai theo phụ thuộc; mỗi giai đoạn có demo, test và tài liệu. Checkbox là checklist v2 độc lập, không
+          kế thừa dấu hoàn thành từ kế hoạch v1 và không thay thế bằng chứng. Ưu tiên độ đúng đặt vé/thanh toán trước
+          tính năng tăng trưởng.</p>
+        <details open>
+          <summary><span>P0</span> Chốt nghiệp vụ và kiểm toán nền hiện có</summary>
+          <p><strong>Phụ thuộc:</strong> Không có</p>
+          <p><strong>Công việc:</strong> Chạy lại build/test/migration/PostgreSQL/concurrency của v1; lập ma trận hiện có
+            và còn thiếu. Chốt DEMO hay PRODUCTION, quy tắc giá, hủy/hoàn, sơ đồ ghế, quyền nội dung và vai trò.
+            Vẽ wireframe khách/admin/nhân viên và sơ đồ trạng thái.</p>
+          <p><strong>Đầu ra:</strong> Tài liệu yêu cầu v2, feature contract, backlog ưu tiên, ma trận quyền, kiến trúc,
+            bản ghi quyết định và báo cáo kiểm toán code.</p>
+          <p><strong>Cổng nghiệm thu:</strong> Không coi lỗi của v1 là hoàn thành; các đầu vào chưa có được gắn owner và
+            ngày cần chốt, không tự giả định quyền nhận tiền.</p><label class="check"><input type="checkbox" data-check="P0"> Đã có bằng chứng đạt P0</label>
+        </details>
+        <details open>
+          <summary><span>P1</span> Danh tính, phân quyền và dữ liệu vận hành</summary>
+          <p><strong>Phụ thuộc:</strong> P0</p>
+          <p><strong>Công việc:</strong> Migration cho cinema/room/seat, movie, showtime, price rule, account/role,
+            audit; đăng nhập/đăng ký/khôi phục tài khoản; MFA admin; quản trị danh mục, phòng, suất và giá.</p>
+          <p><strong>Đầu ra:</strong> API/UI admin và dữ liệu demo có provenance; import CSV dry-run/idempotent.</p>
+          <p><strong>Cổng nghiệm thu:</strong> DB trống migrate được; không thể chồng suất, bán ghế BLOCKED hoặc sửa rạp
+            khác; import hai lần không nhân bản; mọi thao tác nhạy cảm có audit.</p><label class="check"><input
+              type="checkbox" data-check="P1"> Đã có bằng chứng đạt P1</label>
+        </details>
+        <details open>
+          <summary><span>P2</span> Trải nghiệm tìm phim và lịch chiếu</summary>
+          <p><strong>Phụ thuộc:</strong> P1</p>
+          <p><strong>Công việc:</strong> Trang chủ, tìm phim/rạp/ngày, chi tiết phim/rạp, lịch chiếu, tài khoản và lịch
+            sử đơn; thiết kế riêng, giao diện mobile-first, loading/empty/error.</p>
+          <p><strong>Đầu ra:</strong> Route đọc nối API, hệ thống component/tokens và ảnh kiểm tra 390/1440 px.</p>
+          <p><strong>Cổng nghiệm thu:</strong> Dữ liệu công bố đúng phạm vi; UI không tràn ngang, dùng được bằng bàn phím
+            và không mượn thương hiệu Beta.</p><label class="check"><input type="checkbox" data-check="P2"> Đã có bằng
+            chứng đạt P2</label>
+        </details>
+        <details open>
+          <summary><span>P3</span> Giữ ghế và checkout đúng giao dịch</summary>
+          <p><strong>Phụ thuộc:</strong> P1–P2</p>
+          <p><strong>Công việc:</strong> Transaction tất-cả-hoặc-không, snapshot giá server, hạn giữ, idempotency,
+            worker, phục hồi sau reload và UI sơ đồ ghế.</p>
+          <p><strong>Đầu ra:</strong> BookingService, giữ/hủy/đọc và kiểm thử trên PostgreSQL thật.</p>
+          <p><strong>Cổng nghiệm thu:</strong> 50 phiên tranh một ghế chỉ một phiên giữ được; xung đột một ghế rollback
+            toàn nhóm; hết hạn không được xác nhận; giá client bị bỏ qua.</p><label class="check"><input
+              type="checkbox" data-check="P3"> Đã có bằng chứng đạt P3</label>
+        </details>
+        <details open>
+          <summary><span>P4</span> Thanh toán sandbox và đối soát</summary>
+          <p><strong>Phụ thuộc:</strong> P3</p>
+          <p><strong>Công việc:</strong> Tách demo adapter; tích hợp MoMo sandbox trước bằng hosted checkout/IPN có
+            chữ ký. Chuẩn bị VietQR như phương thức thứ hai nhưng chỉ xác nhận tự động sau khi có ngân hàng/đối tác
+            cung cấp webhook hoặc API đối soát đáng tin cậy. Kiểm PENDING, sự kiện muộn/lặp/sai tiền và quy trình
+            REFUND_REQUIRED.</p>
+          <p><strong>Đầu ra:</strong> PaymentService, event log, job đối soát, dashboard giao dịch lỗi và hướng dẫn
+            cấu hình bí mật ngoài repository.</p>
+          <p><strong>Cổng nghiệm thu:</strong> Redirect/nút «đã chuyển khoản» không tự tạo vé; callback lặp không nhân
+            đôi; không mất giao dịch PENDING; tiền đến muộn không chiếm ghế người khác; mỗi phương thức đã bật có bằng
+            chứng đối soát sandbox.</p><label class="check"><input
+              type="checkbox" data-check="P4"> Đã có bằng chứng đạt P4</label>
+        </details>
+        <details open>
+          <summary><span>P5</span> Vé QR, check-in và hoàn vé</summary>
+          <p><strong>Phụ thuộc:</strong> P4</p>
+          <p><strong>Công việc:</strong> Phát một vé/ghế sau khi tiền được xác thực; quét QR đúng rạp/suất, chống quét
+            lặp; yêu cầu/duyệt hoàn theo chính sách, vô hiệu vé và đối soát provider. Gửi thông báo qua outbox.</p>
+          <p><strong>Đầu ra:</strong> Trang vé, màn hình check-in, bảng check-in/refund và nhật ký xử lý.</p>
+          <p><strong>Cổng nghiệm thu:</strong> Vé chỉ cấp sau CONFIRMED; vé đã dùng/hoàn không quét lại; thất bại gửi
+            email không làm mất vé; không báo đã hoàn khi provider chưa xác nhận.</p><label class="check"><input
+              type="checkbox" data-check="P5"> Đã có bằng chứng đạt P5</label>
+        </details>
+        <details open>
+          <summary><span>P6</span> Báo cáo, nội dung và gợi ý</summary>
+          <p><strong>Phụ thuộc:</strong> P2 và P5</p>
+          <p><strong>Công việc:</strong> Báo cáo doanh thu theo khoản đã đối soát, số vé/check-in, tỷ lệ lấp đầy;
+            quản lý nội dung đã được cấp quyền; giữ F02 hiện có và kiểm tra không phá luồng checkout.</p>
+          <p><strong>Đầu ra:</strong> Dashboard theo quyền, xuất dữ liệu có lọc, provenance phim/ảnh và UI cuối.</p>
+          <p><strong>Cổng nghiệm thu:</strong> Báo cáo khớp sổ giao dịch, không tính PENDING là doanh thu; quản lý rạp
+            không xem dữ liệu rạp khác; nguồn DEMO/production phân biệt.</p><label class="check"><input
+              type="checkbox" data-check="P6"> Đã có bằng chứng đạt P6</label>
+        </details>
+        <details open>
+          <summary><span>P7</span> Bảo mật, hiệu năng và độ tin cậy</summary>
+          <p><strong>Phụ thuộc:</strong> P6</p>
+          <p><strong>Công việc:</strong> E2E, concurrency, tải, thử lỗi mạng/provider, ma trận phân quyền, WCAG,
+            backup/restore, rà quét phụ thuộc/bí mật, logging/alerting và diễn tập sự cố.</p>
+          <p><strong>Đầu ra:</strong> Test report có lệnh/exit code, số đo, sơ đồ vận hành, runbook và ảnh UI.</p>
+          <p><strong>Cổng nghiệm thu:</strong> Không double-sell, không vé khi chưa thu tiền, không vượt quyền;
+            khôi phục DB và đối soát được trên staging. Lỗi nghiêm trọng được chặn phát hành.</p><label class="check"><input
+              type="checkbox" data-check="P7"> Đã có bằng chứng đạt P7</label>
+        </details>
+        <details open>
+          <summary><span>P8</span> Phát hành có kiểm soát</summary>
+          <p><strong>Phụ thuộc:</strong> P7</p>
+          <p><strong>Công việc:</strong> Đóng gói local/staging, tài liệu cài đặt, giám sát và rollback; chạy UAT với
+            dữ liệu được duyệt. Chỉ cấu hình production gateway và mở bán sau khi có merchant, quyền nội dung, chính
+            sách pháp lý/hoàn vé, bảo mật và người vận hành chịu trách nhiệm.</p>
+          <p><strong>Đầu ra:</strong> README, OpenAPI, runbook, biên bản UAT và checklist go/no-go.</p>
+          <p><strong>Cổng nghiệm thu:</strong> Nếu thiếu điều kiện production, bàn giao sandbox/demo rõ nhãn; không tự
+            mua dịch vụ, thu tiền hoặc công bố website. Khi mở bán, triển khai từng rạp và theo dõi giao dịch.</p><label
+            class="check"><input type="checkbox" data-check="P8"> Đã có bằng chứng đạt P8</label>
+        </details>
+      </section>
+      <section id="tests">
+        <h2>09 Kiểm thử và lệnh nghiệm thu</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Nhóm</th>
+                <th>Ca bắt buộc</th>
+                <th>Bằng chứng</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Thành công</td>
+                <td>T01 tạo phim/rạp/suất/giá → hai ghế, một đơn, thanh toán xác thực, hai vé, quét vé.</td>
+                <td>E2E ba vai trò và hậu kiểm DB.</td>
+              </tr>
+              <tr>
+                <td>Cạnh tranh</td>
+                <td>T02 cùng ghế; T03 một ghế xung đột trong nhóm; quản trị khóa ghế khi đang bán.</td>
+                <td>Barrier 50 tài khoản, PostgreSQL thật, không chỉ mock.</td>
+              </tr>
+              <tr>
+                <td>Thanh toán</td>
+                <td>T04 IPN lặp 10; T05 tại/sau hạn; T06 FAILED; T07 PENDING/timeout; T12 sai tiền,
+                  tiền thừa, callback đến trước Return URL và Return URL đến trước callback.</td>
+                <td>Sandbox/provider simulator, clock kiểm soát, trạng thái DB trước/sau và đối soát.</td>
+              </tr>
+              <tr>
+                <td>Bảo mật</td>
+                <td>T08 đọc đơn người khác; nhân viên rạp A truy cập rạp B; giả chữ ký, sửa giá client,
+                  CSRF, brute force đăng nhập, token QR đoán/lặp.</td>
+                <td>Từ chối ở API, DB không đổi, audit đúng, log không lộ bí mật.</td>
+              </tr>
+              <tr>
+                <td>Gợi ý</td>
+                <td>T09 A/C/B; T10 cold-start, hòa điểm, &lt;10, rỗng; gợi ý không làm hỏng checkout.</td>
+                <td>Expected định trước, lọc và reasonCode đúng; regression test.</td>
+              </tr>
+              <tr>
+                <td>Phục hồi</td>
+                <td>T11 dừng/restart worker, mất mạng provider, IPN thất lạc; rollback trước commit xác nhận;
+                  hoàn tiền bị treo và thông báo thất bại.</td>
+                <td>Không tạo vé từng phần; job đối soát phục hồi; backup/restore trên staging.</td>
+              </tr>
+              <tr>
+                <td>Quản trị</td>
+                <td>Suất chồng phòng, giá xung đột, sửa phim đã bán, xóa rạp có đơn, báo cáo có PENDING/REFUNDED.</td>
+                <td>Validation, audit và tổng doanh thu đối chiếu payment ledger.</td>
+              </tr>
+              <tr>
+                <td>Vé và hoàn</td>
+                <td>Quét vé đúng/sai rạp, quét hai lần, vé đã hoàn, hoàn sau check-in, hoàn trước giờ chiếu.</td>
+                <td>Ticket/check-in/refund nhất quán, không hoàn sai chính sách.</td>
+              </tr>
+              <tr>
+                <td>UI</td>
+                <td>390/1440px, 200% text, bàn phím, reduced motion, error/empty/reload đơn và QR.</td>
+                <td>Ảnh và E2E; không tràn ngang, reload từ backend, mục tiêu WCAG 2.2 AA.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p><strong>Lệnh hiện có để kiểm lại nền v1</strong> (chỉ đánh dấu đạt khi thực sự chạy được trong môi trường
+          tương ứng). Khi bổ sung tính năng, đồng bộ README, script, OpenAPI và test.</p>
+        <pre><code># PowerShell tại root repository; điền password cục bộ, không commit .env
+Copy-Item infra/.env.example infra/.env
+docker compose --env-file infra/.env -f infra/compose.yaml up --build
+
+# PowerShell tại frontend/
+npm ci
+npm run lint
+npm test
+npm run build
+npm run test:e2e
+
+# PowerShell tại backend/ (cần Java 21 và Maven)
+mvn verify
+
+# PowerShell tại root; chỉ chạy với stack demo cô lập đang hoạt động
+node tests/load/seat-contention.mjs</code></pre>
+        <p>Không chạy lệnh seed/kiểm tải lên production. Báo cáo test ghi lệnh thực tế, exit code, phiên bản mã,
+          môi trường, dữ liệu và tệp kết quả; không ghi đạt khi chưa chạy. Healthcheck chỉ chứng minh dịch vụ đang sống,
+          không chứng minh nghiệp vụ. Với cổng thanh toán thật cần kiểm sandbox theo đặc tả provider đã chọn, không
+          dùng thẻ hoặc tài khoản thật để giả lập lỗi.</p>
+        <p>Đo tải theo mục tiêu kinh doanh đã chốt: ít nhất 10/50/100 phiên trong môi trường cô lập, ghi p50/p95/p99,
+          409 tranh ghế và 5xx riêng, kết quả nhiều lượt chạy. Ngưỡng phát hành do chủ dự án duyệt sau khi có cấu hình
+          máy và số lượng rạp/suất thực. Dữ liệu tổng hợp không được dùng để tuyên bố chất lượng cá nhân hóa thực tế.</p>
+      </section>
+      <section id="codex">
+        <h2>10 Prompt giao việc cho Codex</h2>
+        <p>Dùng HTML này làm kế hoạch v2; báo cáo Word/kế hoạch v1 là nguồn tham khảo cho các quy tắc F01/F02 không
+          xung đột với v2. Codex thực hiện từng giai đoạn, hỏi khi thiếu quyết định về nhận tiền, quyền nội dung,
+          hoàn vé hoặc công bố production.</p><button data-copy="prompt">Sao chép prompt</button>
+        <pre
+          id="prompt">Bạn là Codex chịu trách nhiệm mở rộng CineViet theo kế hoạch HTML v2 này.
+
+1. Đọc repository, README, docs/progress.md, kế hoạch v1 và HTML v2. Kiểm tra thay đổi sẵn có; bảo toàn mã đang chạy, không ghi đè công việc người dùng.
+2. Xác nhận mục tiêu là website rạp chiếu và đặt vé, không phát trực tuyến. V2 gồm khách hàng, quản trị rạp, nhân viên check-in, đặt vé, thanh toán và báo cáo. Giữ F02 hiện có nhưng ưu tiên độ đúng bán vé.
+3. Khởi đầu ở P0: chạy lại build/test, migration và tranh ghế trên PostgreSQL thật khi có môi trường; phân biệt điều đã kiểm với điều chưa kiểm. Ghi ma trận khoảng trống giữa demo và mục tiêu.
+4. Tham khảo https://www.betacinemas.vn/home.htm chỉ về luồng. Nếu 403, không vượt chặn/bịa danh mục. Giữ thương hiệu CineViet; dữ liệu DEMO có nhãn, dữ liệu production cần quyền và phê duyệt.
+5. Giữ React TypeScript, Java 21 Spring Boot, PostgreSQL. Chia module rõ ràng, API có OpenAPI. DB là nguồn sự thật về ghế; server tính tiền và snapshot giá; bảo vệ phiên, CSRF, phân quyền theo rạp, audit.
+6. Làm P0–P8 theo phụ thuộc và cổng nghiệm thu. Xây admin phim/rạp/phòng/ghế/suất/giá, tài khoản/vai trò, luồng khách, transaction giữ ghế, sandbox thanh toán, QR/check-in, hoàn tiền, báo cáo và kiểm thử.
+7. Tách DEMO và PRODUCTION. Tích hợp MoMo sandbox trước; chuẩn bị VietQR nhưng chỉ bật xác nhận tự động khi có đối tác webhook/API giao dịch được chọn. Hosted checkout, IPN/callback kiểm chữ ký, mã đơn, số tiền, currency, idempotency, PENDING/late success/REFUND_REQUIRED. Return URL hay nút «đã chuyển khoản» không tự xác nhận thanh toán. Không lưu dữ liệu thẻ.
+8. Kiểm thử tranh ghế 50 phiên, rollback giữ một phần, IPN lặp/sai tiền/đến muộn, lỗi provider, phân quyền rạp, check-in lặp, hoàn vé và backup/restore. Mọi lỗi chặn bán vé phải sửa trước phát hành.
+9. Sau mỗi giai đoạn cập nhật docs/progress.md: tệp đổi, lệnh/exit code, bằng chứng thật, lỗi còn lại, bước tiếp theo. Đồng bộ code, OpenAPI, test, README và HTML khi đổi quy tắc.
+10. Bàn giao demo/staging tái lập được. Không tự mua dịch vụ, dùng tài khoản thật, thu tiền hoặc công bố website. Chỉ bật production khi chủ dự án cung cấp merchant, dữ liệu/quyền nội dung, chính sách hủy-hoàn, người vận hành và phê duyệt go-live.
+
+Bắt đầu P0. Nếu thiếu quyết định production, tiếp tục phần sandbox an toàn và báo rõ cổng đang chờ; không tuyên bố đã hoàn thành phần chưa kiểm chứng.</pre>
+        <h3>Mẫu tiến độ</h3>
+        <pre><code>Giai đoạn: P__
+Commit hoặc phiên bản mã:
+Tệp đã thay đổi:
+Yêu cầu đã hoàn thành:
+Lệnh thực tế và exit code:
+Bằng chứng:
+Lỗi hoặc giới hạn:
+Thay đổi đặc tả và lý do:
+Bước tiếp theo:</code></pre>
+      </section>
+      <section id="done">
+        <h2>11 Điều kiện bàn giao</h2>
+        <ul>
+          <li>Ba hành trình khách hàng, quản lý và nhân viên chạy xuyên suốt cùng API/DB; UI không tự giả thành công
+            thanh toán.</li>
+          <li>Không double-sell, giá do server quyết định, chỉ phát vé sau thanh toán xác thực; IPN lặp/đến muộn và
+            hoàn tiền có quy trình đối soát.</li>
+          <li>Vai trò và phạm vi rạp được kiểm tại API; check-in một lần; mọi thao tác quản trị và hoàn tiền có audit.</li>
+          <li>Migration, seed DEMO, provenance, OpenAPI, hướng dẫn chạy từ máy trống, backup/restore và runbook đầy đủ.</li>
+          <li>Ca bắt buộc có bằng chứng thực chạy; lỗi bán trùng ghế, phát vé sai, lộ dữ liệu, vượt quyền hoặc thất lạc
+            thanh toán là lỗi chặn bàn giao.</li>
+          <li>Nguồn Beta và dữ liệu mô phỏng phân biệt; chỉ dùng ảnh/metadata có quyền. Chưa có số đo thì ghi chưa đo.</li>
+          <li>DEMO, staging và production có cấu hình/bí mật/dữ liệu riêng. Bàn giao demo không đồng nghĩa đã được phép
+            mở bán thật.</li>
+        </ul>
+        <p><strong>Go-live thật là cổng riêng:</strong> chủ dự án xác nhận pháp nhân/merchant, quyền nội dung, chính
+          sách hủy/hoàn và dữ liệu giá/lịch; UAT, bảo mật, tải, backup/restore, sandbox provider và đối soát đạt; có
+          nhân sự hỗ trợ và quyết định mở bán từng rạp. Khi thiếu thời gian, giữ độ đúng giao dịch và test, hoãn tính
+          năng tăng trưởng thay vì bỏ qua cổng an toàn.</p>
+      </section>
+      <section id="sources">
+        <h2>12 Nguồn và giới hạn</h2>
+        <ol>
+          <li><a href="https://www.betacinemas.vn/home.htm">Beta trang chủ</a> — trực tiếp trả 403 ngày khảo sát.</li>
+          <li><a href="https://betacinemas.vn/gia-ve/gia-ve-rap-meci-cinema-long-thanh.htm">Trang công khai Beta được lập
+              chỉ mục</a> — tham chiếu nhóm chức năng, không chứng minh dữ liệu đang chiếu.</li>
+          <li><a href="https://www.betacinemas.vn/dieu-khoan/huong-dan-dat-ve-online.htm">Beta hướng dẫn đặt vé</a> —
+            nội dung lập chỉ mục về chuỗi tác vụ.</li>
+          <li><a href="https://www.betacinemas.vn/chi-tiet-phim.htm?gf=4e5ce0b0-2ffc-4d44-bdc6-69ed1385a492">Ví dụ
+              metadata phim</a> — dữ liệu lịch sử, cần xác minh lại.</li>
+          <li><a href="https://www.postgresql.org/docs/current/explicit-locking.html">PostgreSQL Explicit Locking</a> —
+            khóa hàng và thứ tự khóa.</li>
+          <li><a href="https://sandbox.vnpayment.vn/apis/docs/thanh-toan-pay/pay.html">VNPAY Payment Gateway sandbox</a>
+            — nguồn lịch sử của kế hoạch v1; không phải provider đã chọn trong v2.</li>
+          <li><a href="https://developers.momo.vn/v3/docs/payment/api/collection-link/">MoMo Collection Link</a> và
+            <a href="https://developers.momo.vn/v3/docs/payment/api/result-handling/notification/">MoMo IPN</a> —
+            luồng hosted checkout, chữ ký và thông báo máy chủ.</li>
+          <li><a href="https://vietqr.io/en/generate/">VietQR tạo QR</a> và
+            <a href="https://www.vietqr.io/en/paymentRequests/">VietQR Payment Requests</a> — QR khác với xác nhận
+            giao dịch; cần đối tác và hợp đồng webhook/đối soát cụ thể.</li>
+          <li><a href="https://www.pcisecuritystandards.org/faqs/1438/">PCI SSC về trang thanh toán bên thứ ba</a> —
+            định hướng không tự thu dữ liệu thẻ; phạm vi tuân thủ cần đánh giá theo tích hợp thực tế.</li>
+          <li><a href="https://cheatsheetseries.owasp.org/cheatsheets/Authorization_Cheat_Sheet.html">OWASP
+              Authorization Cheat Sheet</a> — kiểm quyền ở phía server.</li>
+          <li><a href="https://www.w3.org/TR/wcag/">WCAG 2.2</a> — mục tiêu khả năng tiếp cận.</li>
+          <li><a href="https://nlp.stanford.edu/IR-book/html/htmledition/dot-products-1.html">Introduction to
+              Information Retrieval — Dot products</a> — cơ sở cosine.</li>
+        </ol>
+        <p>Kế hoạch v1 lập ngày 22/09/2026; v2 cập nhật ngày 24/09/2026 theo yêu cầu mở rộng phạm vi. Checkbox chỉ lưu
+          trên trình duyệt này, không gửi dữ liệu hoặc chạy Codex. Kế hoạch không hàm ý hạng mục v2 đã được thực hiện;
+          tài liệu thanh toán/pháp lý phải được xác minh lại trước khi vận hành thật.</p>
+      </section>
+    </main>
+  </div>
+  <footer>Nguyễn Công Việt · K24DTCN548 · D24TXCN13-K · Thầy Nguyễn Đình Hiếu</footer>
+  <script>const key = 'cineviet-beta-plan-v2'; let state = {}; try { state = JSON.parse(localStorage.getItem(key) || '{}') } catch (e) { } function progress() { const c = [...document.querySelectorAll('[data-check]')]; document.getElementById('progress').textContent = c.filter(x => x.checked).length + '/' + c.length + ' giai đoạn được đánh dấu' } document.querySelectorAll('[data-check]').forEach(c => { c.checked = !!state[c.dataset.check]; c.onchange = () => { state[c.dataset.check] = c.checked; try { localStorage.setItem(key, JSON.stringify(state)) } catch (e) { } progress() } }); progress(); document.getElementById('print').onclick = () => { document.querySelectorAll('details').forEach(d => d.open = true); window.print() }; document.getElementById('expand').onclick = () => document.querySelectorAll('details').forEach(d => d.open = true); document.querySelectorAll('[data-copy]').forEach(b => b.onclick = async () => { const t = document.getElementById(b.dataset.copy); try { await navigator.clipboard.writeText(t.innerText); b.textContent = 'Đã sao chép' } catch (e) { const r = document.createRange(); r.selectNodeContents(t); const s = window.getSelection(); s.removeAllRanges(); s.addRange(r); b.textContent = 'Đã chọn nội dung — nhấn Ctrl+C' } });</script>
+</body>
+
+</html>

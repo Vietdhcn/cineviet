@@ -1,0 +1,44 @@
+name: cineviet
+services:
+  postgres:
+    image: postgres:18.6-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-cineviet}
+      POSTGRES_USER: ${POSTGRES_USER:-cineviet}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in infra/.env}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    volumes:
+      - cineviet-db:/var/lib/postgresql/data
+    ports: ["5432:5432"]
+
+  backend:
+    build: ../backend
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB:-cineviet}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER:-cineviet}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:8080/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+
+  frontend:
+    build:
+      context: ../frontend
+      args:
+        VITE_API_MODE: server
+    depends_on:
+      backend:
+        condition: service_healthy
+    ports: ["8088:80"]
+
+volumes:
+  cineviet-db:
