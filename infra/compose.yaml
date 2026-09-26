@@ -22,7 +22,6 @@ services:
       SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER:-cineviet}
       SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
       CINEVIET_CUSTOMER_AUTH_ENABLED: "true"
-      CINEVIET_DEMO_ENABLED: "false"
     depends_on:
       postgres:
         condition: service_healthy

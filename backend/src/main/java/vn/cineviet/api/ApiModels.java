@@ -19,9 +19,6 @@ public final class ApiModels {
     public record BookingItemDto(UUID seatId, String seatLabel, BigDecimal price, UUID ticketToken) {}
     public record BookingDto(UUID id, String reference, UUID showtimeId, List<BookingItemDto> items, String status, Instant expiresAt, BigDecimal total, Instant createdAt) {}
     public record HoldRequest(@NotNull UUID showtimeId, @NotEmpty @Size(max = 8) List<UUID> seatIds) {}
-    public record PaymentRequest(@NotNull PaymentOutcome outcome) {}
-    public enum PaymentOutcome { SUCCESS, FAILED }
     public record RecommendationDto(MovieDto movie, double score, List<String> reasons, Instant earliestShowtime) {}
     public record RecommendationQuery(UUID cinemaId, LocalDate date, List<String> preferredGenres) {}
 }
-

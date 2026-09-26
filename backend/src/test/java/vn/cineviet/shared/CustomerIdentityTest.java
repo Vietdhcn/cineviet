@@ -13,16 +13,16 @@ import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.mock.web.MockHttpServletRequest;
 
-class DemoIdentityTest {
+class CustomerIdentityTest {
     @Test
     @SuppressWarnings("unchecked")
     void rejectsAnOlderCustomerSessionAfterItsAccountVersionChanges() {
         var jdbc = mock(JdbcTemplate.class);
         var provider = mock(ObjectProvider.class);
-        var identity = new DemoIdentity(jdbc, provider, true);
+        var identity = new CustomerIdentity(jdbc, provider);
         var request = new MockHttpServletRequest();
         var accountId = UUID.randomUUID();
-        request.getSession().setAttribute(DemoIdentity.ACCOUNT, accountId);
+        request.getSession().setAttribute(CustomerIdentity.ACCOUNT, accountId);
         request.getSession().setAttribute("cineviet.session-version", 1);
         when(provider.getObject()).thenReturn((HttpServletRequest) request);
         when(jdbc.queryForObject("select session_version from accounts where id=? and password_hash like 'pbkdf2-sha256$%'", Integer.class, accountId)).thenReturn(2);
@@ -36,12 +36,15 @@ class DemoIdentityTest {
     @SuppressWarnings("unchecked")
     void resolvesHttpRequestOnlyWhenReadingTheCurrentAccount() {
         var provider = mock(ObjectProvider.class);
-        var identity = new DemoIdentity(mock(JdbcTemplate.class), provider, false);
+        var jdbc = mock(JdbcTemplate.class);
+        var identity = new CustomerIdentity(jdbc, provider);
         verifyNoInteractions(provider); // Offline CSV import must start without a servlet request.
 
         var request = new MockHttpServletRequest();
         var accountId = UUID.randomUUID();
-        request.getSession().setAttribute(DemoIdentity.ACCOUNT, accountId);
+        request.getSession().setAttribute(CustomerIdentity.ACCOUNT, accountId);
+        request.getSession().setAttribute(CustomerIdentity.SESSION_VERSION, 0);
+        when(jdbc.queryForObject("select session_version from accounts where id=? and password_hash like 'pbkdf2-sha256$%'", Integer.class, accountId)).thenReturn(0);
         when(provider.getObject()).thenReturn((HttpServletRequest) request);
 
         assertThat(identity.accountId()).isEqualTo(accountId);

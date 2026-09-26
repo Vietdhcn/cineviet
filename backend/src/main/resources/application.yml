@@ -32,4 +32,3 @@ cineviet:
   # Customer sessions are the default. Public registration and booking still need
   # operational security review before the backend is exposed to the Internet.
   customer-auth-enabled: true
-  demo-enabled: false

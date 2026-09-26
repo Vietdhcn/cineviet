@@ -11,17 +11,17 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 @Component
-public class DemoCsrfFilter extends OncePerRequestFilter {
+public class CsrfFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
         var method = request.getMethod();
         if (request.getServletPath().startsWith("/api/") && !(method.equals("GET") || method.equals("HEAD") || method.equals("OPTIONS"))) {
             var session = request.getSession(false);
-            var expected = session == null ? null : session.getAttribute(DemoIdentity.CSRF);
+            var expected = session == null ? null : session.getAttribute(CustomerIdentity.CSRF);
             var received = request.getHeader("X-CSRF-Token");
             if (!(expected instanceof String token) || received == null ||
                 !MessageDigest.isEqual(token.getBytes(StandardCharsets.UTF_8), received.getBytes(StandardCharsets.UTF_8))) {
-                response.sendError(HttpServletResponse.SC_FORBIDDEN, "Invalid demo session token");
+                response.sendError(HttpServletResponse.SC_FORBIDDEN, "Invalid CSRF token");
                 return;
             }
         }

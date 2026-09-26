@@ -8,15 +8,15 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockHttpSession;
 
-class DemoCsrfFilterTest {
-    private final DemoCsrfFilter filter = new DemoCsrfFilter();
+class CsrfFilterTest {
+    private final CsrfFilter filter = new CsrfFilter();
 
     @Test
     void rejectsMutationWithoutMatchingSessionToken() throws Exception {
         var request = new MockHttpServletRequest("POST", "/api/bookings/hold");
         request.setServletPath("/api/bookings/hold");
         var session = new MockHttpSession();
-        session.setAttribute(DemoIdentity.CSRF, "expected-token");
+        session.setAttribute(CustomerIdentity.CSRF, "expected-token");
         request.setSession(session);
         request.addHeader("X-CSRF-Token", "wrong-token");
         var response = new MockHttpServletResponse();
@@ -31,7 +31,7 @@ class DemoCsrfFilterTest {
         var request = new MockHttpServletRequest("POST", "/api/bookings/hold");
         request.setServletPath("/api/bookings/hold");
         var session = new MockHttpSession();
-        session.setAttribute(DemoIdentity.CSRF, "expected-token");
+        session.setAttribute(CustomerIdentity.CSRF, "expected-token");
         request.setSession(session);
         request.addHeader("X-CSRF-Token", "expected-token");
         var response = new MockHttpServletResponse();

@@ -11,12 +11,12 @@ import java.util.UUID;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import vn.cineviet.catalog.CatalogService;
-import vn.cineviet.shared.DemoIdentity;
+import vn.cineviet.shared.CustomerIdentity;
 
 @Service
 public class RecommendationService {
-    private final CatalogService catalog; private final JdbcTemplate jdbc; private final DemoIdentity identity;
-    public RecommendationService(CatalogService catalog, JdbcTemplate jdbc, DemoIdentity identity) { this.catalog = catalog; this.jdbc = jdbc; this.identity = identity; }
+    private final CatalogService catalog; private final JdbcTemplate jdbc; private final CustomerIdentity identity;
+    public RecommendationService(CatalogService catalog, JdbcTemplate jdbc, CustomerIdentity identity) { this.catalog = catalog; this.jdbc = jdbc; this.identity = identity; }
 
     public List<RecommendationDto> recommend(UUID cinemaId, LocalDate date, List<String> preferred) {
         var showtimes = catalog.showtimes(cinemaId, date).stream().filter(show -> {

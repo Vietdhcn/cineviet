@@ -24,14 +24,14 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 class CustomerAuthControllerTest {
     private final JdbcTemplate jdbc = mock(JdbcTemplate.class);
-    private final CustomerAuthController auth = new CustomerAuthController(jdbc, new DemoIdentity(jdbc, mock(ObjectProvider.class), true));
+    private final CustomerAuthController auth = new CustomerAuthController(jdbc, new CustomerIdentity(jdbc, mock(ObjectProvider.class)));
 
     @Test
     void logoutAllInvalidatesTheCurrentSession() throws Exception {
         var accountId = UUID.randomUUID();
         var session = new MockHttpSession();
-        session.setAttribute(DemoIdentity.ACCOUNT, accountId);
-        session.setAttribute(DemoIdentity.SESSION_VERSION, 0);
+        session.setAttribute(CustomerIdentity.ACCOUNT, accountId);
+        session.setAttribute(CustomerIdentity.SESSION_VERSION, 0);
         when(jdbc.queryForObject("select session_version from accounts where id=? and password_hash like 'pbkdf2-sha256$%'", Integer.class, accountId)).thenReturn(0);
         when(jdbc.update("update accounts set session_version=session_version+1 where id=? and session_version=?", accountId, 0)).thenReturn(1);
 
@@ -42,20 +42,20 @@ class CustomerAuthControllerTest {
     }
 
     @Test
-    void registrationNormalizesEmailReplacesDemoSessionAndRotatesCsrf() {
+    void registrationNormalizesEmailReplacesPreviousSessionAndRotatesCsrf() {
         var request = new MockHttpServletRequest();
         var prior = request.getSession();
         var priorSessionId = prior.getId();
-        prior.setAttribute(DemoIdentity.ACCOUNT, UUID.randomUUID());
-        prior.setAttribute(DemoIdentity.CSRF, "old-token");
+        prior.setAttribute(CustomerIdentity.ACCOUNT, UUID.randomUUID());
+        prior.setAttribute(CustomerIdentity.CSRF, "old-token");
 
         var response = auth.register(new CustomerAuthController.Credentials("Person@Example.Com", "a strong passphrase"), request);
 
         assertThat(response.email()).isEqualTo("person@example.com");
         assertThat(response.csrfToken()).isNotEqualTo("old-token");
         assertThat(request.getSession().getId()).isNotEqualTo(priorSessionId);
-        assertThat(request.getSession().getAttribute(DemoIdentity.CSRF)).isEqualTo(response.csrfToken());
-        assertThat(request.getSession().getAttribute(DemoIdentity.ACCOUNT)).isInstanceOf(UUID.class);
+        assertThat(request.getSession().getAttribute(CustomerIdentity.CSRF)).isEqualTo(response.csrfToken());
+        assertThat(request.getSession().getAttribute(CustomerIdentity.ACCOUNT)).isInstanceOf(UUID.class);
         verify(jdbc).update(eq("insert into accounts(id,email,password_hash) values (?,?,?)"),
             any(UUID.class), eq("person@example.com"), argThat(
                 hash -> hash instanceof String value && value.startsWith("pbkdf2-sha256$") && !value.contains("a strong passphrase")));
@@ -65,7 +65,7 @@ class CustomerAuthControllerTest {
     void duplicateEmailDoesNotReplaceTheExistingSession() {
         var request = new MockHttpServletRequest();
         var prior = UUID.randomUUID();
-        request.getSession().setAttribute(DemoIdentity.ACCOUNT, prior);
+        request.getSession().setAttribute(CustomerIdentity.ACCOUNT, prior);
         when(jdbc.update(eq("insert into accounts(id,email,password_hash) values (?,?,?)"),
             any(UUID.class), eq("person@example.com"), any(String.class)))
             .thenThrow(new DataIntegrityViolationException("duplicate"));
@@ -74,7 +74,7 @@ class CustomerAuthControllerTest {
             new CustomerAuthController.Credentials("person@example.com", "a strong passphrase"), request))
             .isInstanceOf(ApiExceptionHandler.DomainException.class)
             .hasMessage("Email này đã được sử dụng.");
-        assertThat(request.getSession().getAttribute(DemoIdentity.ACCOUNT)).isEqualTo(prior);
+        assertThat(request.getSession().getAttribute(CustomerIdentity.ACCOUNT)).isEqualTo(prior);
     }
 
     @Test
@@ -95,8 +95,8 @@ class CustomerAuthControllerTest {
         var response = auth.login(new CustomerAuthController.Credentials("PERSON@example.com", "a strong passphrase"), request);
 
         assertThat(response.email()).isEqualTo("person@example.com");
-        assertThat(request.getSession().getAttribute(DemoIdentity.ACCOUNT)).isEqualTo(accountId);
-        assertThat(request.getSession().getAttribute(DemoIdentity.SESSION_VERSION)).isEqualTo(3);
-        assertThat(request.getSession().getAttribute(DemoIdentity.CSRF)).isEqualTo(response.csrfToken());
+        assertThat(request.getSession().getAttribute(CustomerIdentity.ACCOUNT)).isEqualTo(accountId);
+        assertThat(request.getSession().getAttribute(CustomerIdentity.SESSION_VERSION)).isEqualTo(3);
+        assertThat(request.getSession().getAttribute(CustomerIdentity.CSRF)).isEqualTo(response.csrfToken());
     }
 }

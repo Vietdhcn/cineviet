@@ -18,12 +18,12 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import vn.cineviet.shared.DemoIdentity;
+import vn.cineviet.shared.CustomerIdentity;
 
 @Service
 public class BookingService {
-    private final JdbcTemplate jdbc; private final DemoIdentity identity;
-    public BookingService(JdbcTemplate jdbc, DemoIdentity identity) { this.jdbc = jdbc; this.identity = identity; }
+    private final JdbcTemplate jdbc; private final CustomerIdentity identity;
+    public BookingService(JdbcTemplate jdbc, CustomerIdentity identity) { this.jdbc = jdbc; this.identity = identity; }
 
     @Transactional
     public BookingDto hold(HoldRequest request, String idempotencyKey) {
@@ -67,52 +67,6 @@ public class BookingService {
     }
 
     @Transactional
-    public BookingDto confirm(UUID bookingId, String idempotencyKey) {
-        requireKey(idempotencyKey);
-        var accountId = identity.accountId();
-        var signature = hash(bookingId + "|SUCCESS");
-        var status = jdbc.query("select status, expires_at from bookings where id=? and account_id=? for update", rs -> rs.next() ? new BookingLock(rs.getString(1), rs.getTimestamp(2).toInstant()) : null, bookingId, accountId);
-        if (status == null) throw new DomainException(HttpStatus.NOT_FOUND, "BOOKING_NOT_FOUND", "Không tìm thấy đơn đặt vé.");
-        var previous = idempotencyRecord(accountId, "demo-payment", idempotencyKey);
-        if (previous != null) {
-            if (!previous.requestHash().equals(signature)) throw reusedKey();
-            return requireBooking(previous.bookingId());
-        }
-        if ("CONFIRMED".equals(status.status())) return requireBooking(bookingId);
-        var lockedSeats = jdbc.query("select status from showtime_seats where owner_booking_id=? order by seat_id for update", (rs, row) -> rs.getString(1), bookingId);
-        var expectedSeats = jdbc.queryForObject("select count(*) from booking_items where booking_id=?", Integer.class, bookingId);
-        var now = jdbc.queryForObject("select clock_timestamp()", java.sql.Timestamp.class).toInstant();
-        if (!"HELD".equals(status.status()) || !now.isBefore(status.expiresAt())) throw new DomainException(HttpStatus.CONFLICT, "HOLD_EXPIRED", "Thời gian giữ ghế đã hết. Không có khoản thanh toán nào được thực hiện.");
-        if (lockedSeats.size() != expectedSeats || lockedSeats.stream().anyMatch(seat -> !"HELD".equals(seat))) throw new DomainException(HttpStatus.CONFLICT, "SEAT_CONFLICT", "Ghế không còn thuộc đơn giữ chỗ này.");
-        var amount = jdbc.queryForObject("select coalesce(sum(unit_price),0) from booking_items where booking_id=?", BigDecimal.class, bookingId);
-        jdbc.update("insert into payment_attempts(id, booking_id, provider, provider_txn_id, outcome, resolution, amount, created_at) values (?,?, 'DEMO', ?, 'SUCCESS', 'NONE', ?, clock_timestamp())", UUID.randomUUID(), bookingId, "DEMO-" + UUID.randomUUID(), amount);
-        jdbc.update("update bookings set status='CONFIRMED', confirmed_at=clock_timestamp() where id=?", bookingId);
-        jdbc.update("update showtime_seats set status='SOLD' where owner_booking_id=?", bookingId);
-        jdbc.update("insert into tickets(id, booking_item_id, token, issued_at) select gen_random_uuid(), bi.id, gen_random_uuid(), clock_timestamp() from booking_items bi where bi.booking_id=?", bookingId);
-        jdbc.update("insert into idempotency_records(account_id, endpoint, idempotency_key, request_hash, booking_id, created_at) values (?,?,?,?,?,clock_timestamp())", accountId, "demo-payment", idempotencyKey, signature, bookingId);
-        return requireBooking(bookingId);
-    }
-
-    @Transactional
-    public void recordFailedPayment(UUID bookingId, String idempotencyKey) {
-        requireKey(idempotencyKey);
-        var accountId = identity.accountId();
-        var signature = hash(bookingId + "|FAILED");
-        var status = jdbc.query("select status, expires_at from bookings where id=? and account_id=? for update", rs -> rs.next() ? new BookingLock(rs.getString(1), rs.getTimestamp(2).toInstant()) : null, bookingId, accountId);
-        if (status == null) throw new DomainException(HttpStatus.NOT_FOUND, "BOOKING_NOT_FOUND", "Không tìm thấy đơn đặt vé.");
-        var previous = idempotencyRecord(accountId, "demo-payment", idempotencyKey);
-        if (previous != null) {
-            if (!previous.requestHash().equals(signature)) throw reusedKey();
-            return;
-        }
-        var now = jdbc.queryForObject("select clock_timestamp()", java.sql.Timestamp.class).toInstant();
-        if (!"HELD".equals(status.status()) || !now.isBefore(status.expiresAt())) throw new DomainException(HttpStatus.CONFLICT, "HOLD_EXPIRED", "Thời gian giữ ghế đã hết. Không có khoản thanh toán nào được thực hiện.");
-        var amount = jdbc.queryForObject("select coalesce(sum(unit_price),0) from booking_items where booking_id=?", BigDecimal.class, bookingId);
-        jdbc.update("insert into payment_attempts(id, booking_id, provider, provider_txn_id, outcome, resolution, amount, created_at) values (?,?, 'DEMO', ?, 'FAILED', 'NONE', ?, clock_timestamp())", UUID.randomUUID(), bookingId, "DEMO-" + UUID.randomUUID(), amount);
-        jdbc.update("insert into idempotency_records(account_id, endpoint, idempotency_key, request_hash, booking_id, created_at) values (?,?,?,?,?,clock_timestamp())", accountId, "demo-payment", idempotencyKey, signature, bookingId);
-    }
-
-    @Transactional
     public BookingDto cancel(UUID bookingId) {
         var accountId = identity.accountId();
         var changed = jdbc.update("update bookings set status='CANCELLED' where id=? and account_id=? and status='HELD'", bookingId, accountId);
@@ -149,7 +103,6 @@ public class BookingService {
         return new BookingDto(id, rs.getString("reference"), rs.getObject("showtime_id", UUID.class), items, rs.getString("status"), rs.getTimestamp("expires_at").toInstant(), total, rs.getTimestamp("created_at").toInstant());
     }
     private record LockedSeat(UUID id, BigDecimal price, String status) {}
-    private record BookingLock(String status, Instant expiresAt) {}
     private record IdempotencyRecord(String requestHash, UUID bookingId) {}
 
     private IdempotencyRecord idempotencyRecord(UUID accountId, String endpoint, String key) {

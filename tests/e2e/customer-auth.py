@@ -16,7 +16,7 @@ with sync_playwright() as playwright:
     page = browser.new_page(viewport={"width": 1280, "height": 900}, locale="vi-VN")
     page.goto(f"{ORIGIN}/tai-khoan", wait_until="networkidle")
     page.get_by_role("heading", name="Tài khoản của bạn").wait_for()
-    assert "thanh toán chưa khả dụng" in page.locator(".demo-ribbon").inner_text().lower()
+    assert page.get_by_role("heading", name="Tài khoản của bạn").is_visible()
     for width, height in ((390, 844), (375, 812), (844, 390)):
         page.set_viewport_size({"width": width, "height": height})
         assert page.evaluate("document.documentElement.scrollWidth <= window.innerWidth"), f"Account form overflows {width}px"
@@ -37,11 +37,11 @@ with sync_playwright() as playwright:
     page.get_by_role("button", name=re.compile("Giữ ghế & tiếp tục")).click()
     page.get_by_role("heading", name="Xác nhận trước khi đèn tắt").wait_for()
     page.get_by_role("heading", name="Thanh toán chưa khả dụng").wait_for()
-    assert page.get_by_role("button", name="Xác nhận mô phỏng").count() == 0
+    assert page.get_by_role("button", name="Hủy giữ chỗ").is_visible()
     page.get_by_role("button", name="Hủy giữ chỗ").click()
     page.wait_for_url(re.compile(r"/don-ve$"))
     page.get_by_role("heading", name="Đơn vé của tôi").wait_for()
-    assert "phiên demo" not in page.locator(".page-title p").inner_text().lower()
+    assert page.get_by_role("heading", name="Đơn vé của tôi").is_visible()
     page.goto(f"{ORIGIN}/tai-khoan", wait_until="networkidle")
     page.get_by_role("button", name="Đăng xuất", exact=True).click()
     page.locator("form").get_by_role("button", name="Đăng nhập").wait_for()
@@ -66,5 +66,5 @@ with sync_playwright() as playwright:
     page.get_by_role("button", name="Đăng xuất mọi thiết bị").click()
     page.get_by_role("status").get_by_text("Đã đăng xuất khỏi tất cả thiết bị.").wait_for()
     page.locator("form").get_by_role("button", name="Đăng nhập").wait_for()
-    print("CUSTOMER_UI_OK: register, hold without demo payment, cancel, logout, login, return and logout everywhere")
+    print("CUSTOMER_UI_OK: register, hold, cancel, logout, login, return and logout everywhere")
     browser.close()

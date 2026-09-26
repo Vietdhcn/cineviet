@@ -25,10 +25,10 @@ import org.springframework.web.bind.annotation.RestController;
 @ConditionalOnProperty(name = "cineviet.customer-auth-enabled", havingValue = "true")
 public class CustomerAuthController {
     private final JdbcTemplate jdbc;
-    private final DemoIdentity identity;
+    private final CustomerIdentity identity;
     private static final String DUMMY_HASH = PasswordHasher.hash(UUID.randomUUID().toString());
 
-    public CustomerAuthController(JdbcTemplate jdbc, DemoIdentity identity) { this.jdbc = jdbc; this.identity = identity; }
+    public CustomerAuthController(JdbcTemplate jdbc, CustomerIdentity identity) { this.jdbc = jdbc; this.identity = identity; }
 
     public record Credentials(
         @NotBlank @Email @Size(max = 254) String email,
@@ -38,13 +38,13 @@ public class CustomerAuthController {
     public record Profile(String email) {}
     private record Account(UUID id, String email, String passwordHash, int sessionVersion) {}
 
-    /** A CSRF token can be obtained without silently creating a demo account. */
+    /** A CSRF token can be obtained without creating a customer account. */
     @GetMapping("/csrf")
     public java.util.Map<String, String> csrf(HttpServletRequest request) {
         var session = request.getSession();
-        if (!(session.getAttribute(DemoIdentity.CSRF) instanceof String))
-            session.setAttribute(DemoIdentity.CSRF, UUID.randomUUID().toString());
-        return java.util.Map.of("csrfToken", (String) session.getAttribute(DemoIdentity.CSRF));
+        if (!(session.getAttribute(CustomerIdentity.CSRF) instanceof String))
+            session.setAttribute(CustomerIdentity.CSRF, UUID.randomUUID().toString());
+        return java.util.Map.of("csrfToken", (String) session.getAttribute(CustomerIdentity.CSRF));
     }
 
     @GetMapping("/me")
@@ -92,7 +92,7 @@ public class CustomerAuthController {
     public ResponseEntity<Void> logoutAll(HttpServletRequest request) {
         var id = identity.accountId(request);
         var session = request.getSession(false);
-        var version = (Integer) session.getAttribute(DemoIdentity.SESSION_VERSION);
+        var version = (Integer) session.getAttribute(CustomerIdentity.SESSION_VERSION);
         var changed = jdbc.update("update accounts set session_version=session_version+1 where id=? and session_version=?", id, version);
         session.invalidate();
         if (changed != 1)
@@ -103,10 +103,10 @@ public class CustomerAuthController {
     private static AuthSession establish(HttpServletRequest request, UUID id, String email, int version) {
         var session = request.getSession();
         request.changeSessionId();
-        session.setAttribute(DemoIdentity.ACCOUNT, id);
-        session.setAttribute(DemoIdentity.SESSION_VERSION, version);
+        session.setAttribute(CustomerIdentity.ACCOUNT, id);
+        session.setAttribute(CustomerIdentity.SESSION_VERSION, version);
         var csrf = UUID.randomUUID().toString();
-        session.setAttribute(DemoIdentity.CSRF, csrf);
+        session.setAttribute(CustomerIdentity.CSRF, csrf);
         return new AuthSession(email, csrf);
     }
 

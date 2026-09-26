@@ -3,175 +3,120 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="color-scheme" content="dark light">
-  <title>CineViet — đã làm được gì và cần làm gì</title>
+  <title>CineViet — đã làm và còn cần làm</title>
   <style>
-    :root { color-scheme: dark; --bg:#090b14; --panel:#111522; --panel-2:#181d2c; --line:#343b50; --text:#f7f1e8; --muted:#c0c4d1; --dim:#8c93a8; --gold:#f2cb83; --rose:#d84d5e; --green:#80c7a0; --focus:#ffe3a9; }
+    :root { color-scheme:dark; --bg:#0e1320; --panel:#1b2435; --line:#3a485d; --text:#f6f2ea; --muted:#cbd4e3; --gold:#f4c879; --good:#9bddb7; --warning:#ffb6bd; }
     * { box-sizing:border-box; }
-    html { scroll-behavior:smooth; }
     body { margin:0; background:var(--bg); color:var(--text); font:16px/1.65 "Be Vietnam Pro", "Segoe UI", sans-serif; }
     a { color:var(--gold); text-underline-offset:3px; }
-    a:hover { color:#ffe4ad; }
-    :focus-visible { outline:3px solid var(--focus); outline-offset:3px; }
-    .skip { position:absolute; left:-9999px; top:12px; padding:8px 14px; background:var(--gold); color:#17131a; z-index:10; }
-    .skip:focus { left:12px; }
-    .masthead { position:relative; overflow:hidden; border-bottom:1px solid var(--line); background:linear-gradient(115deg,var(--bg) 25%,var(--panel-2)); }
-    .masthead::after { content:""; position:absolute; right:max(5%,calc((100vw - 1240px)/2)); bottom:0; width:150px; height:42%; transform:skew(-16deg); background:linear-gradient(90deg,#16255c 0 35%,#8f2939 35% 76%,var(--gold) 76%); opacity:.7; pointer-events:none; }
-    .masthead__inner { max-width:1240px; margin:auto; padding:28px 24px 70px; position:relative; z-index:1; }
-    .brand { font-family:"Bricolage Grotesque Variable", "Segoe UI", sans-serif; font-weight:800; letter-spacing:-.04em; font-size:1.35rem; text-decoration:none; color:var(--text); }
+    :focus-visible { outline:3px solid var(--gold); outline-offset:3px; }
+    header, main, footer { max-width:1100px; margin:auto; padding:28px 22px; }
+    header { padding-top:40px; padding-bottom:44px; border-bottom:1px solid var(--line); }
+    .brand { color:var(--text); font-size:1.25rem; font-weight:800; text-decoration:none; }
     .brand span { color:var(--gold); }
-    .topline { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:12px; }
-    .revision { color:var(--muted); font-size:.83rem; }
-    .masthead h1 { max-width:850px; font:700 clamp(2.5rem,6vw,5.2rem)/1.07 "Bricolage Grotesque Variable", "Segoe UI", sans-serif; letter-spacing:-.035em; margin:65px 0 24px; }
-    .masthead h1 em { color:var(--gold); font-style:normal; }
-    .masthead p { max-width:760px; color:var(--muted); font-size:1.12rem; margin:0; }
-    .status-strip { display:flex; flex-wrap:wrap; gap:12px; margin-top:34px; }
-    .status-strip span { border:1px solid var(--line); border-radius:8px; padding:7px 12px; background:#111626; font-size:.85rem; }
-    .status-strip .blocked { color:#ffd0d5; border-color:#8f3e4a; }
-    .status-strip .target { color:var(--gold); }
-    .status-strip .verified { color:var(--green); }
-    .shell { max-width:1240px; margin:auto; display:grid; grid-template-columns:220px minmax(0,1fr); gap:56px; padding:48px 24px 90px; }
-    nav { position:sticky; top:24px; align-self:start; border-top:1px solid var(--line); padding-top:15px; }
-    nav strong { display:block; color:var(--dim); font-size:.72rem; text-transform:uppercase; letter-spacing:.12em; margin:0 0 10px; }
-    nav a { display:block; color:var(--muted); text-decoration:none; padding:6px 0; font-size:.91rem; }
-    nav a:hover { color:var(--gold); }
-    main { min-width:0; }
-    section { padding:0 0 58px; margin-bottom:54px; border-bottom:1px solid var(--line); scroll-margin-top:24px; }
-    section:last-child { border:0; margin:0; }
-    h2 { font:700 clamp(1.65rem,3vw,2.5rem)/1.15 "Bricolage Grotesque Variable", "Segoe UI", sans-serif; letter-spacing:-.025em; margin:0 0 19px; }
-    h3 { font-size:1.14rem; margin:26px 0 8px; }
-    p { margin:10px 0 18px; max-width:75ch; }
-    .lead { color:var(--muted); font-size:1.03rem; }
-    .decision { display:grid; grid-template-columns:minmax(0,1.2fr) minmax(250px,.8fr); gap:24px; align-items:stretch; margin:28px 0 0; }
-    .decision__main { border-top:3px solid var(--rose); padding:20px 24px; background:var(--panel); }
-    .decision__main strong { color:#ffb6c0; }
-    .decision__main p { margin-bottom:0; }
-    .decision__aside { border-top:3px solid var(--gold); padding:20px 24px; background:var(--panel-2); }
-    .decision__aside strong { color:var(--gold); }
-    .decision__aside p { margin-bottom:0; }
-    .table-wrap { overflow-x:auto; border:1px solid var(--line); border-radius:12px; }
-    table { border-collapse:collapse; width:100%; min-width:720px; font-size:.91rem; }
-    th { background:var(--panel-2); color:var(--gold); text-align:left; font-weight:700; }
-    th,td { padding:14px 16px; vertical-align:top; border-bottom:1px solid var(--line); }
-    tr:last-child td { border-bottom:0; }
-    tbody tr:nth-child(even) { background:#101522; }
-    td:first-child { font-weight:700; width:21%; }
-    .state { display:inline-block; font-size:.76rem; font-weight:700; border-radius:5px; padding:2px 7px; white-space:nowrap; }
-    .state--partial { color:#17131a; background:var(--gold); }
-    .state--missing { color:#fff; background:#8f2939; }
-    .state--proof { color:#0d241a; background:var(--green); }
-    .steps { counter-reset:step; list-style:none; padding:0; margin:24px 0 0; }
-    .steps li { position:relative; padding:18px 0 20px 66px; border-top:1px solid var(--line); }
-    .steps li::before { counter-increment:step; content:counter(step,decimal-leading-zero); position:absolute; top:17px; left:0; font:700 1.5rem/1 "Bricolage Grotesque Variable",sans-serif; color:var(--gold); }
-    .steps li strong { display:block; font-size:1.07rem; }
-    .steps li p { color:var(--muted); margin:5px 0 0; }
-    .steps li small { display:block; color:var(--green); margin-top:8px; font-size:.82rem; }
-    .inputs { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:20px 30px; margin-top:25px; }
-    .inputs div { padding:17px 0; border-top:1px solid var(--line); }
-    .inputs strong { display:block; color:var(--gold); }
-    .inputs p { margin:7px 0 0; color:var(--muted); font-size:.92rem; }
-    .gate { border:1px solid #8f3e4a; background:#21151e; padding:22px 25px; border-radius:10px; margin-top:25px; }
-    .gate strong { color:#ffbec7; }
-    .gate ul { padding-left:22px; margin:12px 0 0; }
-    .source-list { padding-left:20px; }
-    .source-list li { margin:7px 0; }
-    footer { max-width:1240px; margin:auto; padding:26px 24px 38px; border-top:1px solid var(--line); color:var(--dim); font-size:.83rem; }
-    @media (max-width:800px) { .shell { display:block; padding-top:30px; } nav { position:static; display:flex; flex-wrap:wrap; gap:4px 16px; margin-bottom:48px; } nav strong { width:100%; } nav a { padding:2px 0; } .decision { grid-template-columns:1fr; } .inputs { grid-template-columns:1fr; } .masthead::after { opacity:.18; } .masthead__inner { padding-bottom:50px; } .masthead h1 { margin-top:45px; } }
-    @media (max-width:500px) { body { font-size:15px; } .masthead__inner,.shell,footer { padding-left:18px; padding-right:18px; } .status-strip span { width:100%; } .steps li { padding-left:48px; } .steps li::before { font-size:1.2rem; } }
-    @media (prefers-reduced-motion:reduce) { html { scroll-behavior:auto; } }
-    @media print { :root { color-scheme:light; --bg:#fff; --panel:#fff; --panel-2:#f4f5f7; --line:#bac2cc; --text:#171b23; --muted:#394251; --dim:#505966; --gold:#6c4500; --rose:#802434; --green:#24613c; } body { background:#fff; color:var(--text); } .masthead { background:#fff; } .masthead::after,nav { display:none; } .masthead__inner { padding-bottom:24px; } .masthead h1 { margin:20px 0; } .shell { display:block; padding-top:25px; } section { break-inside:avoid; } .state--partial,.state--missing,.state--proof { color:#111; background:#eee; border:1px solid #777; } .decision__main,.decision__aside,.gate { background:#fff; } a { color:#263f65; } }
+    .eyebrow { color:var(--gold); font-weight:700; letter-spacing:.12em; text-transform:uppercase; font-size:.8rem; margin-top:52px; }
+    h1 { font-size:clamp(2.5rem,7vw,5rem); line-height:1.07; letter-spacing:-.04em; margin:8px 0 22px; max-width:850px; }
+    h2 { font-size:clamp(1.5rem,3vw,2.3rem); line-height:1.2; margin:0 0 18px; }
+    h3 { margin:0 0 8px; font-size:1.1rem; }
+    p { margin:8px 0 16px; max-width:80ch; }
+    .lead { color:var(--muted); font-size:1.08rem; }
+    .badges { display:flex; gap:10px; flex-wrap:wrap; margin-top:28px; }
+    .badges span { border:1px solid var(--line); border-radius:6px; padding:6px 10px; }
+    .badges .good { color:var(--good); }.badges .hold { color:var(--warning); }
+    nav { display:flex; flex-wrap:wrap; gap:10px 23px; padding:26px 0; border-bottom:1px solid var(--line); }
+    section { padding:48px 0; border-bottom:1px solid var(--line); }
+    .cards { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; margin:24px 0; }
+    .card { background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:22px; }
+    .card p:last-child { margin-bottom:0; }
+    .card.good { border-top:3px solid var(--good); }.card.hold { border-top:3px solid var(--warning); }
+    .table-wrap { overflow-x:auto; border:1px solid var(--line); border-radius:10px; }
+    table { width:100%; min-width:720px; border-collapse:collapse; }
+    th,td { padding:14px; text-align:left; vertical-align:top; border-bottom:1px solid var(--line); }
+    th { color:var(--gold); background:var(--panel); } tr:last-child td { border:0; }
+    td:first-child { font-weight:700; width:19%; }
+    ol,ul { padding-left:24px; } li { margin:10px 0; }
+    code { overflow-wrap:anywhere; }
+    footer { color:var(--muted); padding-bottom:48px; }
+    @media(max-width:650px) { .cards { grid-template-columns:1fr; } section { padding:36px 0; } }
+    @media print { :root { color-scheme:light; --bg:#fff; --panel:#f5f6f7; --line:#b4becb; --text:#151923; --muted:#303945; --gold:#764b00; --good:#24613c; --warning:#8c2633; } body { background:#fff; } section { break-inside:avoid; } }
   </style>
 </head>
 <body>
-  <a class="skip" href="#main">Bỏ qua điều hướng</a>
-  <header class="masthead">
-    <div class="masthead__inner">
-      <div class="topline"><a class="brand" href="README.md">Cine<span>Viet</span></a><span class="revision">Cập nhật 27/09/2026 · đối chiếu mã nguồn và kết quả kiểm thử cục bộ</span></div>
-      <h1>Đã làm được gì.<br><em>Còn cần làm gì.</em></h1>
-      <p>Bản kiểm kê theo kế hoạch P0–P8: tài khoản khách và giữ/hủy ghế đã được kiểm thử cục bộ với backend/PostgreSQL. Dữ liệu phim/rạp vẫn là mẫu; chưa có đủ điều kiện nhận tiền thật hoặc mở bán.</p>
-      <div class="status-strip" aria-label="Trạng thái dự án"><span class="verified">Đã kiểm cục bộ: tài khoản, giữ/hủy ghế, thu hồi mọi phiên</span><span class="blocked">Chưa mở bán · thanh toán để sau</span><span class="target">Đích: đặt vé, thanh toán, soát vé và vận hành theo rạp</span></div>
-    </div>
+  <header>
+    <a class="brand" href="README.md">Cine<span>Viet</span></a>
+    <p class="eyebrow">Cập nhật 27/09/2026 · chạy trên máy cá nhân</p>
+    <h1>Không còn bản demo công khai.<br>Ứng dụng thật vẫn chưa mở bán.</h1>
+    <p class="lead">GitHub Pages đã được hủy xuất bản. Frontend cục bộ chỉ gọi Java API và PostgreSQL; dữ liệu phim, rạp, lịch chiếu hư cấu không còn được phục vụ. Chưa có dữ liệu đối tác được cấp quyền, nên danh mục hiện trống. Thanh toán để giai đoạn sau.</p>
+    <div class="badges"><span class="good">Đã chạy và kiểm thử cục bộ</span><span class="hold">Chưa có dữ liệu rạp thật</span><span class="hold">Không nhận tiền hoặc phát vé</span></div>
   </header>
-  <div class="shell">
-    <nav aria-label="Mục lục"><strong>Trong tài liệu</strong><a href="#ket-luan">Kết luận hiện trạng</a><a href="#trien-khai">GitHub &amp; Pages</a><a href="#da-co">Đã làm được gì</a><a href="#tien-do">Tiến độ P0–P8</a><a href="#viec-ngay">Việc cần làm ngay</a><a href="#lo-trinh">Thứ tự làm thật</a><a href="#can-chu-du-an">Cần chủ dự án cung cấp</a><a href="#cong-mo-ban">Cổng mở bán</a><a href="#bang-chung">Nguồn và bằng chứng</a></nav>
-    <main id="main" tabindex="-1">
-      <section id="ket-luan">
-        <h2>Kết luận hiện trạng</h2>
-        <p class="lead">Trang công khai không còn chạy ứng dụng đặt vé hư cấu: GitHub Pages chỉ hiển thị “CineViet chưa mở bán”. Frontend trong mã nguồn chỉ gọi API máy chủ; backend mặc định dùng phiên tài khoản, không tạo lịch hoặc thanh toán giả. Migration V5 rút phim và rạp hư cấu khỏi danh mục. Chưa có dữ liệu đối tác được cấp quyền, hạ tầng công khai hay thanh toán.</p>
-        <div class="decision"><div class="decision__main"><strong>Chưa có giai đoạn P0–P8 nào được nghiệm thu trọn vẹn</strong><p>Backend và PostgreSQL đã qua một số kiểm thử cục bộ, nhưng bản chạy local hiện sẽ có danh mục trống sau migration V5 cho tới khi nhập dữ liệu thật. Tài khoản và giữ chỗ dùng DB; không được xem đó là hệ thống bán vé sẵn sàng công khai vì còn thiếu xác minh email, chống lạm dụng, quyền quản trị, khôi phục/sao lưu và UAT. Thanh toán để sau.</p></div><div class="decision__aside"><strong>Quyết định an toàn</strong><p>Không xóa nhãn khỏi dữ liệu giả rồi tiếp tục bán. Trang công khai đóng chức năng giao dịch; dữ liệu lịch sử cũ được giữ để tránh mất tham chiếu, còn phim/rạp hư cấu bị ẩn. Chỉ mở từng phần sau khi có dữ liệu được duyệt và kiểm thử tương ứng.</p></div></div>
-      </section>
-      <section id="trien-khai">
-        <h2>Triển khai GitHub &amp; Pages</h2>
-        <p class="lead">Mã nguồn public tại <a href="https://github.com/Vietdhcn/cineviet">Vietdhcn/cineviet</a>. <a href="https://vietdhcn.github.io/cineviet/">GitHub Pages</a> được chuyển sang trang trạng thái “chưa mở bán”, không còn ứng dụng đặt vé hay thanh toán mô phỏng. Việc phát hành bản thay thế cần GitHub Actions hoàn tất; không coi Pages là nơi chạy backend.</p>
-        <div class="decision"><div class="decision__main"><strong>Đã chuẩn bị trong mã nguồn</strong><p>Workflow kiểm tra lint, test và build frontend nhưng chỉ xuất bản <code>public-site/</code>; bài kiểm thử riêng bảo đảm trang công khai không có liên kết đặt ghế hoặc thanh toán. Frontend chạy local chỉ dùng HTTP API và không còn fallback tạo phiên demo.</p></div><div class="decision__aside"><strong>Chưa triển khai công khai</strong><p>Java API và PostgreSQL có thể chạy trên máy cá nhân để phát triển nội bộ. Chưa công khai vì cần domain/HTTPS, sao lưu, giám sát và rà soát bảo mật. Chưa có dữ liệu rạp/phim/lịch/giá được cấp quyền; thanh toán để sau.</p></div></div>
-      </section>
-      <section id="da-co">
-        <h2>Đã làm được gì</h2>
-        <p>“Có mã” là chức năng đã được viết; “đã thử” là kiểm tra thực sự chạy. Hai trạng thái này không đồng nghĩa đã sẵn sàng sản xuất.</p>
-        <div class="table-wrap"><table><thead><tr><th>Hạng mục</th><th>Đã có trong dự án</th><th>Phần còn thiếu để dùng thật</th></tr></thead><tbody>
-          <tr><td>Giao diện khách <span class="state state--partial">API máy chủ, chưa mở bán</span></td><td>Frontend hiện chỉ gọi backend; không còn cổng thanh toán mô phỏng hoặc màn hình điều hành demo trong tuyến truy cập. 19 test frontend, lint và build đã đạt. Các luồng đặt ghế cục bộ trước đây dùng dữ liệu hư cấu chỉ là bằng chứng kỹ thuật lịch sử.</td><td>Dữ liệu rạp/phim/lịch được cấp quyền, hoàn thiện bảo vệ tài khoản và kiểm tra accessibility/UAT với nội dung thật.</td></tr>
-          <tr><td>Backend &amp; DB <span class="state state--proof">Đã thử trên PostgreSQL</span></td><td>Flyway V1–V4 chạy trên PostgreSQL 18.6 cục bộ; 22 test Java đạt. Giữ ghế 50 phiên × 4 lượt: mỗi lượt một đơn HELD, 49 xung đột; rollback, hủy, hết hạn, giá server và idempotency đã thử với API và DB. Migration V4 và thu hồi phiên hai thiết bị cũng đã thử trên DB riêng.</td><td>Chưa có backup/restore, giám sát, kiểm thử staging và vận hành sản xuất. Docker Compose chưa được nghiệm thu riêng trên máy này.</td></tr>
-          <tr><td>Tài khoản khách <span class="state state--partial">UI + API, chỉ local</span></td><td>Trang <code>/tai-khoan</code> dùng API đăng ký/đăng nhập/đăng xuất, CSRF và phiên HttpOnly; email không phân biệt hoa/thường, mật khẩu PBKDF2. Thu hồi mọi phiên và giữ/hủy ghế theo tài khoản đã thử trên DB. Backend mặc định dùng xác thực khách; các route demo không bật mặc định.</td><td>Xác minh quyền sở hữu email, khôi phục mật khẩu, chống thử mật khẩu hàng loạt, vai trò/MFA quản trị và kiểm thử bảo mật đầy đủ. Không bật công khai.</td></tr>
-          <tr><td>Danh mục vận hành <span class="state state--partial">Một phần</span></td><td>CSV 12 phim hư cấu có nguồn; dry-run và áp dụng lặp đã kiểm trên PostgreSQL. Màn hình tạo/hủy suất chỉ hoạt động trong trình duyệt demo.</td><td>Admin backend có đăng nhập, quyền theo rạp, audit; import dữ liệu có giấy phép; phòng, ghế, suất, giá và ghế chặn quản lý bằng DB.</td></tr>
-          <tr><td>Thanh toán <span class="state state--missing">Để giai đoạn sau</span></td><td>Frontend hiện chỉ thông báo chưa khả dụng và cho hủy giữ chỗ; không gọi API thanh toán mô phỏng. Route demo cũ còn trong mã nguồn nhưng chỉ kích hoạt khi cấu hình riêng <code>cineviet.demo-enabled=true</code>; tuyệt đối không bật trên dữ liệu thật. Lớp ký HMAC MoMo có test.</td><td>MoMo sandbox hosted checkout, IPN xác thực, PENDING/đối soát/hoàn cần xử lý. VietQR chỉ được xác nhận khi có ngân hàng hoặc đối tác cấp thông báo giao dịch đáng tin cậy.</td></tr>
-          <tr><td>Vé &amp; vận hành <span class="state state--missing">Chưa có check-in thật</span></td><td>Mỗi ghế xác nhận trong demo sinh một QR token.</td><td>Chỉ phát vé sau tiền đã xác thực; màn hình nhân viên kiểm token đúng rạp/suất, chống quét lặp; quy trình hủy/hoàn và báo cáo đối soát.</td></tr>
-        </tbody></table></div>
-      </section>
-      <section id="tien-do">
-        <h2>Tiến độ theo kế hoạch P0–P8</h2>
-        <p class="lead">“Một phần” nghĩa là có mã hoặc bằng chứng demo, không có nghĩa đã qua cổng nghiệm thu của giai đoạn.</p>
-        <div class="table-wrap"><table><thead><tr><th>Giai đoạn</th><th>Đã có</th><th>Còn để nghiệm thu</th></tr></thead><tbody>
-          <tr><td>P0 · Kiểm toán nền <span class="state state--partial">Một phần</span></td><td>Frontend lint/build và 19 test đạt; backend 22 test Java đạt. Flyway V1–V5 đã chạy trên DB kiểm thử PostgreSQL 18.6 riêng: 12 phim hư cấu bị ẩn, 3 rạp ngừng hoạt động, 5 suất cũ vẫn còn. Bài kiểm tra cấu hình an toàn và trang công khai đạt. Tranh ghế 50 phiên và thu hồi phiên hai thiết bị đã thử trước đây trên DB cục bộ.</td><td>Chốt quy tắc kinh doanh, quyền nội dung, vai trò, người chịu trách nhiệm; kiểm chứng backup/restore và môi trường staging.</td></tr>
-          <tr><td>P1 · Danh tính và dữ liệu vận hành <span class="state state--partial">Một phần</span></td><td>UI/API tài khoản khách và thu hồi mọi phiên đã qua kiểm thử cục bộ; xác thực khách hiện bật mặc định cho môi trường local. Route và lịch demo tắt mặc định; V5 ẩn seed hư cấu, nhưng chưa có dữ liệu thay thế.</td><td>Xác minh email/khôi phục/chống lạm dụng, RBAC/MFA, audit và API quản trị rạp/phòng/ghế/suất/giá.</td></tr>
-          <tr><td>P2 · Tìm phim và lịch <span class="state state--partial">Demo đã thử</span></td><td>Trang phim, rạp, lọc ngày, lịch chiếu, trạng thái loading/empty/error và kiểm tra giao diện 390/1440 px.</td><td>Nối dữ liệu đã được cấp quyền và công bố qua backend; thử lại quyền truy cập, bàn phím và nội dung thật.</td></tr>
-          <tr><td>P3 · Giữ ghế <span class="state state--partial">Lõi trước thanh toán đã thử DB</span></td><td>50 phiên × 4 lượt: một người giữ, 49 xung đột; xung đột nhóm không để lại đơn/ghế lẻ. Đã thử giá do server tính, idempotency, giới hạn chủ đơn, hủy và worker hết hạn trên PostgreSQL.</td><td>Bổ sung kiểm thử biên nhiều ghế/tải dài, khôi phục sau sự cố và trạng thái xác nhận muộn khi đến giai đoạn thanh toán.</td></tr>
-          <tr><td>P4 · Thanh toán <span class="state state--missing">Chưa tích hợp thật</span></td><td>Có thanh toán mô phỏng và hàm ký/kiểm chữ ký MoMo với unit test.</td><td>MoMo sandbox hosted checkout, IPN xác thực, chống lặp/sai tiền, PENDING/đối soát/tiền đến muộn; VietQR cần kênh xác nhận ngân hàng đáng tin cậy.</td></tr>
-          <tr><td>P5 · Vé, check-in, hoàn <span class="state state--partial">Vé demo</span></td><td>Có QR token cho từng ghế của đơn xác nhận mô phỏng.</td><td>Chỉ cấp vé sau tiền đã xác thực; quét đúng rạp/suất một lần, hoàn tiền theo provider, vô hiệu vé và thông báo tin cậy.</td></tr>
-          <tr><td>P6 · Báo cáo, nội dung, gợi ý <span class="state state--partial">Gợi ý demo</span></td><td>Có thuật toán gợi ý với test và dữ liệu phim hư cấu có ghi nguồn.</td><td>Báo cáo doanh thu đã đối soát, phân quyền theo rạp, nội dung có giấy phép và kiểm chất lượng gợi ý với dữ liệu thật.</td></tr>
-          <tr><td>P7 · Bảo mật và độ tin cậy <span class="state state--partial">Kiểm thử cục bộ</span></td><td>22 test Java, 18 test frontend, 3 browser smoke demo trước đó và 1 luồng tài khoản thật vừa chạy; tích hợp thu hồi hai phiên, tài khoản khác không bị ảnh hưởng và đăng nhập lại đã đạt trên PostgreSQL. Các bài giữ ghế/hết hạn và tranh ghế 50 phiên × 4 lượt đã đạt trước đó. Trang tài khoản không tràn ở 375/390 px và ngang, cả trước và sau đăng nhập.</td><td>Kiểm thử tải dài, phân quyền, accessibility với dữ liệu thật, backup/restore, giám sát và diễn tập trên staging; lỗi provider để giai đoạn thanh toán.</td></tr>
-          <tr><td>P8 · Phát hành <span class="state state--missing">Chưa mở bán</span></td><td>Mã nguồn public; GitHub Pages được cấu hình để chỉ xuất bản trang “chưa mở bán” thay ứng dụng đặt vé. Backend và PostgreSQL chưa chạy công khai. Có Compose, README, OpenAPI và kế hoạch bàn giao.</td><td>Triển khai backend/PostgreSQL trên staging phù hợp, UAT, runbook, rollback, dữ liệu/chính sách được duyệt và quyết định go/no-go bằng văn bản. Pages không thay thế các cổng này.</td></tr>
-        </tbody></table></div>
-      </section>
-      <section id="viec-ngay">
-        <h2>Việc cần làm ngay</h2>
-        <p class="lead">Trang công khai đã được đóng giao dịch; frontend local chỉ gọi API máy chủ. Tiếp tục hoàn thiện và kiểm thử từng mốc với dữ liệu được cấp quyền; thanh toán chưa nằm trong lượt triển khai này.</p>
-        <ol class="steps">
-          <li><strong>Xác minh email khách hàng</strong><p>Bổ sung gửi email và token xác minh một lần có thời hạn; chỉ sau khi xác minh mới cho dùng các chức năng cần danh tính đã được kiểm chứng. Thử email trùng, token hết hạn, dùng lại và thay đổi địa chỉ.</p><small>Cổng đạt: không thể tự nhận email của người khác; chưa xác minh không vượt qua giới hạn quyền. Cần cấu hình dịch vụ gửi email và chính sách xử lý lỗi.</small></li>
-          <li><strong>Khôi phục và bảo vệ phiên khách hàng</strong><p>Đã có lệnh thu hồi mọi phiên theo yêu cầu, kiểm thử hai thiết bị và tài khoản khác trên DB riêng. Còn làm đặt lại mật khẩu bằng token một lần, giới hạn thử đăng nhập bền vững và tự thu hồi phiên sau đổi mật khẩu hoặc khi có sự cố; thử hết hạn/dùng lại token, đăng nhập nhiều thiết bị và truy cập đơn của người khác.</p><small>Cổng đạt: không chiếm được tài khoản/đơn qua luồng khôi phục hoặc phiên cũ. Chỉ cân nhắc bật <code>cineviet.customer-auth-enabled</code> công khai sau kiểm thử bảo mật.</small></li>
-          <li><strong>Quyền nhân viên và quản trị theo rạp</strong><p>Thêm vai trò khách/nhân viên/quản lý/super admin, MFA cho quản trị và nhật ký thao tác nhạy cảm; kiểm thử quyền âm tính giữa các rạp trước khi nối giao diện điều hành.</p><small>Cổng đạt: nhân viên không đọc hoặc sửa đơn, lịch, giá của rạp ngoài phạm vi; thao tác quản trị truy được người thực hiện.</small></li>
-          <li><strong>Đưa dữ liệu vận hành lên backend</strong><p>Thêm API và giao diện rạp/phòng/ghế/suất/giá, kiểm soát chống chồng lịch, giá snapshot và nội dung phim có quyền sử dụng. Kiểm thử từng luồng với PostgreSQL.</p><small>Hiện màn hình điều hành chỉ là demo lưu trong trình duyệt; dữ liệu thật cần được chủ dự án cung cấp và duyệt.</small></li>
-          <li><strong>Kiểm thử phục hồi và môi trường staging</strong><p>Thử backup/restore, tải dài, khởi động lại giữa các trạng thái giữ ghế, log/alert và tái kiểm tra ràng buộc DB. Chỉ sau đó mới nghiệm thu phần trước thanh toán.</p><small>Migration, import và tranh ghế cục bộ đã đạt; chưa chứng minh khả năng phục hồi sản xuất.</small></li>
-        </ol>
-      </section>
-      <section id="lo-trinh">
-        <h2>Thứ tự làm thật</h2>
-        <p class="lead">Các bước theo phụ thuộc nghiệp vụ; không gán ngày hoàn thành khi chưa có môi trường và thông tin đối tác.</p>
-        <ol class="steps">
-          <li><strong>Xác nhận nền dữ liệu và đặt ghế trên PostgreSQL</strong><p>Đã chạy Flyway V1–V4 trên DB mới, import CSV lặp, 50 phiên tranh ghế qua bốn lượt, đối chiếu DB sau xung đột/hủy/hết hạn và thử thu hồi phiên hai thiết bị. Giữ bộ kiểm thử này làm cổng hồi quy cho mỗi thay đổi.</p><small>Đã đạt cục bộ; vẫn cần backup/restore và diễn tập staging trước nghiệm thu hoàn chỉnh.</small></li>
-          <li><strong>Tài khoản, nhân sự và quyền theo rạp</strong><p>Đăng ký/đăng nhập và thu hồi mọi phiên theo yêu cầu đã chạy cục bộ. Còn khôi phục mật khẩu, xác minh email, chống lạm dụng, tự thu hồi khi đổi mật khẩu; MFA cho quản trị. Thêm vai trò khách, nhân viên, quản lý rạp, super admin; audit mọi thao tác nhạy cảm.</p><small>Đạt khi: không đọc đơn người khác hoặc sửa lịch/giá của rạp khác.</small></li>
-          <li><strong>Quản trị rạp, phòng, ghế, phim, suất và giá trên server</strong><p>Thay bộ quản lý localStorage bằng API và DB có validation, chống chồng suất, giá snapshot khi giữ ghế, xuất xứ và quyền sử dụng nội dung. Công bố dữ liệu thật chỉ sau phê duyệt.</p><small>Đạt khi: quản lý vận hành được rạp mình; phim chưa duyệt không xuất hiện ở trang khách.</small></li>
-          <li><strong>Thanh toán MoMo sandbox và trạng thái đơn chính xác</strong><p>Tạo payment attempt từ giá server, chuyển sang trang thanh toán do MoMo lưu trữ; xác minh IPN, chống lặp, xử lý tiền đến muộn và đối soát PENDING. Trang trả về chỉ đọc trạng thái.</p><small>Đạt khi: không có vé do redirect hoặc nút “đã trả”; callback lặp/sai tiền không tạo vé.</small></li>
-          <li><strong>VietQR, vé, check-in và hoàn tiền</strong><p>Chỉ bật VietQR tự động sau khi có kênh xác nhận giao dịch. Cấp vé sau khi tiền được xác thực; check-in đúng rạp/suất một lần; hoàn theo chính sách và kết quả provider.</p><small>Đạt khi: vé chưa thanh toán/đã dùng/đã hoàn không qua cổng; tiền hoàn có mã đối soát.</small></li>
-          <li><strong>Báo cáo, kiểm thử tải và vận hành</strong><p>Báo cáo trên khoản đã đối soát, kiểm thử lỗi mạng/provider, phân quyền, backup/restore, log/alert, bảo mật, accessibility và UAT với dữ liệu được duyệt.</p><small>Đạt khi: báo cáo khớp sổ giao dịch và có quy trình xử lý sự cố, hoàn vé, khôi phục.</small></li>
-        </ol>
-      </section>
-      <section id="can-chu-du-an">
-        <h2>Cần chủ dự án cung cấp</h2>
-        <p>Đây là các đầu vào không thể suy ra từ mã nguồn. Có thể tiếp tục phần kỹ thuật trên máy cá nhân trong lúc chờ, nhưng chưa thể mở bán.</p>
-        <div class="inputs"><div><strong>Đơn vị vận hành và phạm vi rạp</strong><p>Pháp nhân/đơn vị bán vé, rạp thực tế, người quản lý từng rạp và người chịu trách nhiệm vận hành.</p></div><div><strong>Quyền dữ liệu và hình ảnh</strong><p>Tên rạp, địa chỉ, phòng, sơ đồ ghế, lịch chiếu và giá thật; nguồn/định dạng dữ liệu, người có quyền cấp phép, quyền poster/trailer và người duyệt công bố. Đây là đầu vào cần cung cấp trước tiên.</p></div><div><strong>Máy cá nhân để chạy local</strong><p>Có thể dùng ngay cho backend/PostgreSQL nội bộ. Cần biết hệ điều hành, RAM trống, phiên bản PostgreSQL hoặc quyền cài đặt, và bạn có muốn tôi chạy dịch vụ local trên máy này hay không. Không mở cổng Internet ở bước này.</p></div><div><strong>Hạ tầng công khai sau này</strong><p>Nếu phục vụ khách Internet: domain/TLS, máy luôn bật, sao lưu, giám sát, bảo vệ mạng, người vận hành và staging. Chưa yêu cầu mua dịch vụ ngay.</p></div><div><strong>Chính sách kinh doanh</strong><p>Giá/thuế/phí, thời hạn giữ ghế, hủy/đổi/hoàn, điều kiện check-in và văn bản hiển thị cho khách.</p></div><div><strong>Thanh toán — để sau</strong><p>Chỉ khi các phần trước đã nghiệm thu mới cần merchant MoMo hoặc kênh xác nhận giao dịch VietQR; hiện không cần gửi thông tin tài chính.</p></div></div>
-      </section>
-      <section id="cong-mo-ban">
-        <h2>Cổng mở bán</h2>
-        <p>Trạng thái “thật” chỉ được bật khi toàn bộ các điều kiện sau có bằng chứng trong staging và được chủ dự án phê duyệt.</p>
-        <div class="gate"><strong>Chưa đạt — chưa mở bán và không thu tiền</strong><ul><li>Migration và tranh ghế đã đạt cục bộ; còn phải kiểm tra phục hồi dữ liệu, tải và khởi động lại trên staging tương đương sản xuất.</li><li>Khách, nhân viên, quản lý và super admin có quyền đúng phạm vi; thao tác được audit.</li><li>Phim, rạp, lịch, giá và nội dung truyền thông có quyền sử dụng và được phê duyệt.</li><li>Mỗi phương thức thanh toán đã bật có IPN/đối soát sandbox; không có vé khi chưa xác thực tiền.</li><li>Check-in, hoàn tiền, báo cáo, backup/restore và xử lý sự cố đã qua UAT.</li><li>Merchant, chính sách, bảo mật, người vận hành và quyết định go-live được chốt bằng văn bản.</li></ul></div>
-      </section>
-      <section id="bang-chung">
-        <h2>Nguồn và bằng chứng</h2>
-        <p>Trang này tổng kết mã nguồn và kiểm thử cục bộ. Pages chỉ là trang trạng thái; bằng chứng trước đây về frontend dữ liệu mẫu không chứng minh hệ thống thật đã sẵn sàng. Cần kiểm thử staging, dữ liệu thật và UAT.</p>
-        <ul class="source-list"><li><a href="https://github.com/Vietdhcn/cineviet/actions">GitHub Actions và kết quả triển khai Pages</a></li><li><a href=".github/workflows/pages.yml">Workflow build/deploy frontend</a></li><li><a href="tests/e2e/github-pages.py">Bài thử đường dẫn Pages</a></li><li><a href="Ke_hoach_Codex_Website_dat_ve_Beta.html">Kế hoạch sản phẩm v2 P0–P8</a></li><li><a href="docs/progress.md">Nhật ký triển khai và kiểm thử</a></li><li><a href="tests/load/seat-contention.mjs">Bài thử tranh ghế 50 phiên</a></li><li><a href="tests/integration/customer-auth.mjs">Bài thử API tài khoản</a></li><li><a href="tests/integration/logout-all.mjs">Bài thử thu hồi mọi phiên</a></li><li><a href="tests/e2e/customer-auth.py">Bài thử trình duyệt tài khoản</a></li><li><a href="tests/integration/booking-hold.mjs">Bài thử giữ ghế</a></li><li><a href="tests/integration/hold-expiry.mjs">Bài thử hết hạn</a></li><li><a href="docs/payment-momo-vietqr.md">Hợp đồng tích hợp MoMo/VietQR</a></li><li><a href="docs/v2-catalog-import-contract.md">Hợp đồng import dữ liệu phim</a></li><li><a href="README.md">Cách chạy bản hiện tại</a></li></ul>
-      </section>
-    </main>
-  </div>
-  <footer>CineViet · Kế hoạch chuyển đổi, chưa phải chứng nhận sẵn sàng sản xuất. Nội dung cần cập nhật sau mỗi cổng nghiệm thu có bằng chứng.</footer>
+  <main>
+    <nav aria-label="Mục lục"><a href="#da-lam">Đã làm</a><a href="#con-thieu">Còn thiếu</a><a href="#tien-do">P0–P8</a><a href="#tiep-theo">Bước tiếp theo</a><a href="#can-cung-cap">Bạn cần cung cấp</a><a href="#kiem-chung">Kiểm chứng</a></nav>
+    <section id="da-lam">
+      <h2>Đã làm được gì</h2>
+      <div class="cards">
+        <div class="card good"><h3>Đã bỏ luồng mô phỏng</h3><p>Xóa tạo tài khoản ẩn danh, API xác nhận thanh toán giả, bộ tạo lịch tự động, cổng dữ liệu trình duyệt, màn hình vận hành localStorage và màn hình vé QR giả. Giao diện giữ chỗ không còn bước “nhận vé”.</p></div>
+        <div class="card good"><h3>Đã rút dữ liệu hư cấu</h3><p>Migration V6 xóa phim/rạp/suất/ghế/tài khoản mẫu không có đơn liên quan; thử riêng một đơn lịch sử cho thấy đơn, phim, rạp, suất và tài khoản vẫn được giữ. Đã xóa CSV mẫu và đường nhập lại nó. Flyway V1/V2 được giữ nguyên checksum để các DB cũ vẫn nâng cấp được.</p></div>
+        <div class="card good"><h3>App cục bộ đang chạy</h3><p>Backend tại <code>127.0.0.1:8080</code>, frontend tại <a href="http://127.0.0.1:5173/">127.0.0.1:5173</a>, PostgreSQL kiểm thử cục bộ. Health API trả UP; phim, rạp và suất chiếu đều trả mảng rỗng. Đây là môi trường phát triển, không phải hạ tầng vận hành bền vững.</p></div>
+        <div class="card good"><h3>Kiểm thử hiện tại</h3><p>Frontend lint, 16 unit test và build đạt. Backend Maven clean package và các unit test đạt. Bài kiểm tra migration V6 đạt trên DB riêng; bài kiểm tra API khẳng định endpoint phiên ẩn danh và thanh toán giả trả 404. Đã xem trang chủ trong trình duyệt với trạng thái không có lịch.</p></div>
+        <div class="card good"><h3>Tài khoản và giữ chỗ</h3><p>Đăng ký, đăng nhập, đăng xuất, thu hồi mọi phiên, giữ/hủy ghế theo tài khoản và giá do server tính đã có trong mã và từng được thử trên PostgreSQL cục bộ. Chưa thể nghiệm thu toàn luồng hiện tại khi không có suất chiếu được cấp quyền.</p></div>
+        <div class="card good"><h3>GitHub</h3><p>Repository <a href="https://github.com/Vietdhcn/cineviet">Vietdhcn/cineviet</a> vẫn public để lưu mã. Pages đã hủy xuất bản và workflow xuất bản bị xóa; GitHub Pages không thể chạy Java/PostgreSQL trên máy cá nhân.</p></div>
+      </div>
+    </section>
+    <section id="con-thieu">
+      <h2>Còn thiếu để dùng thật</h2>
+      <p class="lead">Không có nhãn “demo” không đồng nghĩa hệ thống đã đủ điều kiện giao dịch. Chưa mở cổng từ Internet, chưa thu tiền và chưa phát vé.</p>
+      <div class="table-wrap"><table><thead><tr><th>Phần</th><th>Hiện trạng</th><th>Điều kiện hoàn tất</th></tr></thead><tbody>
+        <tr><td>Dữ liệu vận hành</td><td>Danh mục trống; chưa có nguồn cấp quyền.</td><td>Rạp, phòng, sơ đồ ghế, phim, lịch, giá và quyền dùng hình ảnh được đối tác duyệt.</td></tr>
+        <tr><td>Quản trị</td><td>Chưa có API/giao diện quản trị thật.</td><td>Quyền theo rạp, MFA quản trị, audit, duyệt nội dung và chống lịch chồng nhau.</td></tr>
+        <tr><td>Tài khoản</td><td>Phiên khách và mật khẩu đã có, chỉ dùng local.</td><td>Xác minh email, khôi phục mật khẩu, chống đoán mật khẩu và kiểm tra bảo mật.</td></tr>
+        <tr><td>Vận hành</td><td>Chưa kiểm thử backup/restore, giám sát, staging.</td><td>Thử phục hồi, tải dài, log/alert, HTTPS và quy trình xử lý sự cố.</td></tr>
+        <tr><td>Thanh toán/vé</td><td>Không có luồng trả tiền hoặc vé hợp lệ.</td><td>Để sau khi các phần trước nghiệm thu: cổng thanh toán, IPN, đối soát, vé và check-in.</td></tr>
+      </tbody></table></div>
+    </section>
+    <section id="tien-do">
+      <h2>Tiến độ P0–P8</h2>
+      <div class="table-wrap"><table><thead><tr><th>Giai đoạn</th><th>Đã chứng minh</th><th>Còn cần</th></tr></thead><tbody>
+        <tr><td>P0 · Nền tảng</td><td>Build/test cục bộ; Pages đã gỡ; V6 rút seed trên DB thử.</td><td>Backup/restore, staging và chốt quy tắc vận hành.</td></tr>
+        <tr><td>P1 · Danh tính, dữ liệu</td><td>Phiên khách và PostgreSQL.</td><td>Xác minh email, RBAC/MFA, API quản trị và dữ liệu có quyền.</td></tr>
+        <tr><td>P2 · Danh mục, lịch</td><td>Giao diện đọc API, có trạng thái trống/lỗi.</td><td>Nhập, duyệt và kiểm thử dữ liệu thật.</td></tr>
+        <tr><td>P3 · Giữ ghế</td><td>Logic DB, giá server, hủy/hết hạn đã từng thử.</td><td>Thử lại end-to-end trên lịch được cấp quyền và tải dài.</td></tr>
+        <tr><td>P4 · Thanh toán</td><td>Chưa triển khai giao dịch thật.</td><td>Để sau: provider, IPN và đối soát.</td></tr>
+        <tr><td>P5 · Vé/check-in</td><td>Không phát vé giả nữa.</td><td>Chỉ phát vé sau thanh toán xác thực; soát vé và hoàn.</td></tr>
+        <tr><td>P6 · Báo cáo/gợi ý</td><td>Thuật toán gợi ý và unit test.</td><td>Nội dung thật, chất lượng gợi ý và báo cáo đối soát.</td></tr>
+        <tr><td>P7 · Tin cậy</td><td>Kiểm thử đơn vị và một số tích hợp cục bộ.</td><td>Security, accessibility, tải, khôi phục và UAT.</td></tr>
+        <tr><td>P8 · Phát hành</td><td>Mã public; Pages tắt.</td><td>Hạ tầng công khai an toàn và quyết định mở bán bằng văn bản.</td></tr>
+      </tbody></table></div>
+    </section>
+    <section id="tiep-theo">
+      <h2>Làm tiếp từng phần một</h2>
+      <ol>
+        <li>Chốt đơn vị vận hành, phạm vi một rạp đầu tiên và bộ dữ liệu phim/rạp/phòng/ghế/lịch/giá có quyền sử dụng.</li>
+        <li>Hoàn thiện danh tính khách: xác minh email, khôi phục mật khẩu và chống lạm dụng; viết kiểm thử trước mỗi thay đổi.</li>
+        <li>Xây quyền quản trị theo rạp, nhật ký thao tác và API nhập/duyệt dữ liệu; thử trên PostgreSQL.</li>
+        <li>Chạy lại toàn bộ hành trình chọn suất → giữ/hủy ghế bằng dữ liệu được duyệt, rồi kiểm thử tải và phục hồi.</li>
+        <li>Chỉ sau khi các phần trên đạt mới bắt đầu thanh toán; không dùng nút xác nhận tiền hoặc vé giả.</li>
+      </ol>
+    </section>
+    <section id="can-cung-cap">
+      <h2>Thông tin bạn cần cung cấp</h2>
+      <ul>
+        <li>Tên đơn vị/rạp hợp tác và người có quyền cho phép dùng dữ liệu, hoặc xác nhận bạn tự vận hành rạp nào.</li>
+        <li>Một bộ dữ liệu có thể kiểm chứng: địa chỉ rạp, phòng, sơ đồ ghế, suất chiếu, giá, phim và nguồn/quyền poster; người duyệt công bố.</li>
+        <li>Quy tắc giữ chỗ, hủy/đổi vé, vai trò nhân viên và phạm vi từng rạp.</li>
+        <li>Nếu muốn ứng dụng chạy bền vững trên máy cá nhân: tài khoản quản trị máy/PostgreSQL, nơi lưu bản sao lưu và cách khởi động cùng Windows. Không cần thông tin thanh toán lúc này.</li>
+      </ul>
+    </section>
+    <section id="kiem-chung">
+      <h2>Nguồn kiểm chứng</h2>
+      <p>Các kết quả “đạt” trên là cục bộ, không phải nghiệm thu sản xuất. SQL V6 xóa các hàng seed không có tham chiếu; trước khi chạy trên DB chứa dữ liệu cần sao lưu và xem xét dữ liệu lịch sử.</p>
+      <ul>
+        <li><a href="README.md">Hướng dẫn chạy và kiểm thử</a></li>
+        <li><a href="backend/src/main/resources/db/migration/V6__remove_unreferenced_demo_seed.sql">Migration V6</a></li>
+        <li><a href="tests/integration/no-seed-data.test.mjs">Bài thử rút seed</a> và <a href="tests/integration/no-demo-endpoints.test.mjs">bài thử không còn endpoint giả</a></li>
+        <li><a href="tests/integration/customer-auth.mjs">Bài thử API tài khoản</a> · <a href="tests/integration/logout-all.mjs">thu hồi phiên</a></li>
+      </ul>
+    </section>
+  </main>
+  <footer>CineViet · Chưa mở bán · Cập nhật khi từng phần được kiểm thử và nghiệm thu.</footer>
 </body>
 </html>

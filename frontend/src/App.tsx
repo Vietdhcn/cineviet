@@ -1,10 +1,9 @@
-import { createBrowserRouter, createHashRouter, Link, RouterProvider } from 'react-router-dom';
+import { createBrowserRouter, Link, RouterProvider } from 'react-router-dom';
 import { Layout } from './ui/Layout';
 import { CatalogPage } from './features/catalog/CatalogPage';
 import { MoviePage } from './features/catalog/MoviePage';
 import { SeatPage } from './features/booking/SeatPage';
 import { CheckoutPage } from './features/booking/CheckoutPage';
-import { TicketPage } from './features/booking/TicketPage';
 import { BookingsPage } from './features/booking/BookingsPage';
 import { RecommendationPage } from './features/recommendation/RecommendationPage';
 import { CinemaDirectoryPage } from './features/cinemas/CinemaDirectoryPage';
@@ -20,7 +19,6 @@ const routes = [{
     { path: 'rap/:cinemaId', element: <CinemaDetailPage /> },
     { path: 'dat-ghe/:showtimeId', element: <SeatPage /> },
     { path: 'thanh-toan/:bookingId', element: <CheckoutPage /> },
-    { path: 've/:bookingId', element: <TicketPage /> },
     { path: 'don-ve', element: <BookingsPage /> },
     { path: 'goi-y', element: <RecommendationPage /> },
     { path: 'tai-khoan', element: <AccountPage /> },
@@ -28,7 +26,6 @@ const routes = [{
   ],
 }];
 
-// Static project sites cannot rewrite nested paths to index.html on refresh.
-const router = import.meta.env.BASE_URL === '/' ? createBrowserRouter(routes) : createHashRouter(routes);
+const router = createBrowserRouter(routes);
 
 export default function App() { return <RouterProvider router={router} />; }

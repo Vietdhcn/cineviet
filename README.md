@@ -1,52 +1,46 @@
 # CineViet
 
-CineViet is a cinema-booking project being prepared for real operational data. It is **not open for ticket sales**. The public [GitHub Pages site](https://vietdhcn.github.io/cineviet/) displays a launch-status page only; GitHub Pages does not run the Java API or PostgreSQL. [plan.html](plan.html) records what has been verified and what remains.
+CineViet đang được phát triển trên máy cá nhân, **chưa mở bán và không nhận thanh toán**. GitHub Pages đã được hủy xuất bản; repository [Vietdhcn/cineviet](https://github.com/Vietdhcn/cineviet) chỉ lưu mã nguồn. Xem [plan.html](plan.html) để biết phần đã kiểm và phần còn thiếu.
 
-## Current behavior
+## Trạng thái hiện tại
 
-- The frontend uses the HTTP API only. It does not create browser-local bookings or offer simulated payment.
-- The backend defaults to customer sessions (`cineviet.customer-auth-enabled=true`), with demo session/payment routes and generated fictional showtimes off by default (`cineviet.demo-enabled=false`).
-- Flyway V5 hides the twelve fictional movies and deactivates the three fictional venues seeded by older migrations. It preserves historical booking records and their foreign keys. Until approved data is imported, the catalogue is empty.
-- Customers can register, log in, hold or cancel seats on PostgreSQL and log out everywhere in a local environment. A hold does not create a paid ticket; payment is deferred.
-- Do **not** expose the backend publicly yet. Email verification/recovery, durable abuse controls, staff authorization/MFA, operational backup/restore, licensed data and staging UAT are missing.
+- Frontend chỉ gọi Java API; không có dữ liệu đặt vé trong localStorage, phiên khách ẩn danh, thanh toán giả hoặc vé QR giả.
+- Backend dùng phiên tài khoản và PostgreSQL. Có đăng ký/đăng nhập/đăng xuất, thu hồi mọi phiên, giữ và hủy chỗ. Chưa xác minh email/khôi phục mật khẩu; không đưa backend ra Internet.
+- Flyway V1/V2 là migration lịch sử không thể sửa checksum. V5 ẩn dữ liệu hư cấu; V6 xóa các hàng seed không có đơn hoặc ghế bị chiếm tham chiếu, giữ các hàng còn liên quan lịch sử. Đường nhập lại CSV hư cấu đã bị xóa. Danh mục hiện trống cho tới khi có dữ liệu được cấp quyền.
+- Thanh toán để sau. Không có khoản thu hoặc vé hợp lệ được tạo từ bản này.
 
-Older demo adapters, seed migrations, synthetic CSV and local tests remain in the repository as historical development material. Do not enable `cineviet.demo-enabled` or import `data/movies.reference.csv` into an operational database. Historical tickets are not valid for check-in.
+## Chạy cục bộ
 
-## Run locally on a personal computer
-
-Requires Docker Compose v2, or Java 21, PostgreSQL and Node.js 22.12+ installed separately. With Compose:
+Cần Docker Compose v2, hoặc Java 21, PostgreSQL và Node.js 22.12+ cài riêng. Cách dự kiến với Compose (chưa nghiệm thu trên máy này):
 
 ```powershell
 Copy-Item infra/.env.example infra/.env
-# Set a strong local PostgreSQL password in infra/.env.
+# Đặt mật khẩu PostgreSQL riêng, mạnh, trong infra/.env.
 docker compose --env-file infra/.env -f infra/compose.yaml up --build
 ```
 
-Open `http://localhost:8088`. Compose binds the web app and PostgreSQL to `127.0.0.1` only. Do not forward these ports to the Internet. Stop without deleting data:
+Mở `http://127.0.0.1:8088`. Compose chỉ bind cổng vào `127.0.0.1`; không chuyển tiếp cổng ra Internet. Dừng mà không xóa dữ liệu:
 
 ```powershell
 docker compose --env-file infra/.env -f infra/compose.yaml down
 ```
 
-For a separate frontend development server, run `npm ci` and `npm run dev` inside `frontend/`. Its `/api` requests require a running backend; without one it shows a connection error instead of fabricated data.
+Nếu chạy frontend riêng, vào `frontend/`, dùng `npm ci` rồi `npm run dev`. Proxy `/api` cần backend đang chạy ở cổng 8080. Không có backend, giao diện hiển thị lỗi kết nối; không tự tạo dữ liệu.
 
-## Verification
+## Kiểm thử
 
 ```powershell
-node --test public-site/site.test.mjs backend/safety.test.mjs
 cd frontend
 npm ci
 npm run lint
 npm test
 npm run build
 cd ../backend
-mvn test
+mvn clean package
 ```
 
-The current source includes 19 frontend tests and 22 Java tests. The new safety tests verify the public page, backend defaults and synthetic-data withdrawal contract. Flyway V1–V5 ran on a separate local PostgreSQL 18.6 test database: 12 fictional movies were hidden, three fictional cinemas made inactive, and five historical showtimes preserved. A browser flow with authorized data and a recovery exercise are still required before accepting the new configuration as complete.
+Các bài `tests/integration/no-demo-endpoints.test.mjs` cần backend cục bộ ở `127.0.0.1:18080` (hoặc `CINEVIET_API_URL`). Bài `tests/integration/no-seed-data.test.mjs` chỉ được chạy với PostgreSQL **cách ly**, tên database dạng `cineviet_*_check`, và `CINEVIET_PSQL_BIN` trỏ tới `psql`. Không chạy migration dọn seed trên dữ liệu thật khi chưa sao lưu/xem xét tham chiếu lịch sử.
 
-## Inputs needed for the next real feature
+## Cần cung cấp để làm phần thật tiếp theo
 
-Provide the actual cinema/operator, authorized movie and venue data, rooms/seats, showtimes and prices, plus who may approve publication and what rights apply to images. A personal computer is sufficient for local development and internal checks; public access additionally needs secure hosting, domain/HTTPS, backup, monitoring and an operator. Payment credentials are **not needed now**.
-
-See [plan.html](plan.html) for the work sequence and go/no-go conditions. The application is not affiliated with Beta Cinemas.
+Đơn vị vận hành/rạp, người có quyền cấp phép, phim/rạp/phòng/sơ đồ ghế/lịch/giá có nguồn xác minh và quyền dùng hình ảnh, người duyệt công bố, cùng chính sách giữ/hủy chỗ. Máy cá nhân dùng được cho phát triển và kiểm thử nội bộ; dịch vụ Internet cần hạ tầng an toàn và vận hành liên tục. **Chưa cần tài khoản thanh toán.**

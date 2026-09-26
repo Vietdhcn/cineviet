@@ -1,2 +1,0 @@
-sourceKey,title,genres,durationMinutes,releaseDate,ageRating,sourceUrl,fetchedAt,verifiedAt,origin,visibility,posterPath,rightsNote,country,slug,tagline,synopsis,palette,artworkLabel,featured
-test-timestamp-film,Phim Kiểm Thử Thời Gian,Tâm lý,90,2026-09-26,P,https://example.org/test-film,2026-09-26T08:30:00Z,2026-09-26T09:15:00Z,SYNTHETIC,DRAFT,,Synthetic DEMO test fixture,Việt Nam,phim-kiem-thu-thoi-gian,Bản ghi thử nghiệm,Chỉ dùng để kiểm tra mốc thời gian import.,#111111|#222222|#333333,Mốc thời gian,false

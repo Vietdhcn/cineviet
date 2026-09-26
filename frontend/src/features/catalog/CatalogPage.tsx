@@ -42,7 +42,7 @@ export function CatalogPage() {
 
     <section className="booking-dock" id="lich-chieu" aria-labelledby="schedule-title">
       <div><h2 id="schedule-title">Chọn nơi ánh đèn bật lên</h2><p>Cập nhật theo rạp và ngày bạn muốn xem.</p></div>
-      <label><MapPin aria-hidden="true" /><span>Rạp phim</span><select value={cinemaId} onChange={(event) => { setState('loading'); setCinemaId(event.target.value); }}>{cinemas.map((cinema) => <option key={cinema.id} value={cinema.id}>{cinema.name}</option>)}</select></label>
+      <label><MapPin aria-hidden="true" /><span>Rạp phim</span><select value={cinemaId} disabled={state === 'ready' && cinemas.length === 0} onChange={(event) => { setState('loading'); setCinemaId(event.target.value); }}>{cinemas.length === 0 && <option value="">Chưa có rạp</option>}{cinemas.map((cinema) => <option key={cinema.id} value={cinema.id}>{cinema.name}</option>)}</select></label>
       <label><CalendarDays aria-hidden="true" /><span>Ngày xem</span><input type="date" min={today()} value={date} onChange={(event) => { setState('loading'); setDate(event.target.value); }} /></label>
     </section>
 
