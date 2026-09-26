@@ -95,7 +95,7 @@ Historical entries below describe the state when recorded; statements that Postg
 ## P6–P8 — Finish and handoff
 
 - Original artwork, responsive UI, accessibility states, design-system record, Docker packaging, README and browser end-to-end smoke evidence are present.
-- Production deployment, real data import, real-user recommendation evaluation and public publishing are intentionally not claimed.
+- The source repository is public and the synthetic-data frontend is deployed on GitHub Pages; its build/deploy workflow and refreshable cinema route were checked. This is not a production backend deployment. Real data import and real-user recommendation evaluation are not claimed.
 
 ## Outstanding source-plan gates
 

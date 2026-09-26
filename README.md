@@ -13,7 +13,7 @@ Customer registration/login/logout and on-demand “log out all devices” now h
 
 ## GitHub Pages showcase
 
-The [Pages workflow](.github/workflows/pages.yml) checks lint and unit tests, then builds only `frontend/` with `VITE_API_MODE=demo` and the `/cineviet/` base path. Its hash routes (for example, `/#/rap`) survive refresh on a static host. To reproduce the build locally:
+The public source is [Vietdhcn/cineviet](https://github.com/Vietdhcn/cineviet), and the live synthetic-data frontend is at [vietdhcn.github.io/cineviet/](https://vietdhcn.github.io/cineviet/). The [Pages workflow](.github/workflows/pages.yml) checks lint and unit tests, then builds only `frontend/` with `VITE_API_MODE=demo` and the `/cineviet/` base path. Its hash routes (for example, `/#/rap`) survive refresh on a static host. To reproduce the build locally:
 
 ```powershell
 cd frontend
