@@ -29,7 +29,7 @@ management:
         enabled: true
 cineviet:
   hold-duration: PT5M
-  # Opt in only on an isolated development/staging database. Customer sessions and
-  # holds work; demo session/payment routes are disabled. Email verification,
-  # recovery, abuse controls, admin MFA and real payment are still absent.
-  customer-auth-enabled: false
+  # Customer sessions are the default. Public registration and booking still need
+  # operational security review before the backend is exposed to the Internet.
+  customer-auth-enabled: true
+  demo-enabled: false

@@ -7,7 +7,6 @@ import { CheckoutPage } from './features/booking/CheckoutPage';
 import { TicketPage } from './features/booking/TicketPage';
 import { BookingsPage } from './features/booking/BookingsPage';
 import { RecommendationPage } from './features/recommendation/RecommendationPage';
-import { OperationsPage } from './features/operations/OperationsPage';
 import { CinemaDirectoryPage } from './features/cinemas/CinemaDirectoryPage';
 import { CinemaDetailPage } from './features/cinemas/CinemaDetailPage';
 import { EmptyState } from './ui/Loading';
@@ -25,7 +24,6 @@ const routes = [{
     { path: 'don-ve', element: <BookingsPage /> },
     { path: 'goi-y', element: <RecommendationPage /> },
     { path: 'tai-khoan', element: <AccountPage /> },
-    { path: 'dieu-hanh', element: <OperationsPage /> },
     { path: '*', element: <div className="page"><EmptyState title="Lạc khỏi phòng chiếu" body="Đường dẫn này không tồn tại trong CineViet." action={<Link className="button button--primary" to="/">Về trang chủ</Link>} /></div> },
   ],
 }];

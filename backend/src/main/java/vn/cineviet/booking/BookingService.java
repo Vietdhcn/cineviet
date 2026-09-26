@@ -41,7 +41,13 @@ public class BookingService {
         expireForAccount();
         var active = jdbc.queryForObject("select count(*) from bookings where account_id=? and status='HELD' and expires_at>clock_timestamp()", Integer.class, accountId);
         if (active != null && active > 0) throw new DomainException(HttpStatus.CONFLICT, "ACTIVE_HOLD_EXISTS", "Tài khoản đang có một đơn giữ chỗ. Hãy hoàn tất hoặc hủy đơn đó trước.");
-        var showtimeStart = jdbc.query("select starts_at from showtimes where id=? for update", rs -> rs.next() ? rs.getTimestamp(1).toInstant() : null, request.showtimeId());
+        var showtimeStart = jdbc.query("""
+            select s.starts_at from showtimes s
+            join movies m on m.id = s.movie_id
+            join cinemas c on c.id = s.cinema_id
+            where s.id = ? and m.visibility = 'PUBLISHED' and c.active
+            for update of s
+            """, rs -> rs.next() ? rs.getTimestamp(1).toInstant() : null, request.showtimeId());
         if (showtimeStart == null) throw new DomainException(HttpStatus.NOT_FOUND, "SHOWTIME_NOT_FOUND", "Suất chiếu không tồn tại.");
         var placeholders = String.join(",", java.util.Collections.nCopies(distinct.size(), "?"));
         var params = new java.util.ArrayList<Object>(); params.add(request.showtimeId()); params.addAll(distinct);

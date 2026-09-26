@@ -1,14 +1,13 @@
 import { ArrowRight, LockKeyhole, LogOut, UserRound } from 'lucide-react';
 import { useEffect, useState, type FormEvent } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
-import { isDemoMode } from '../../app/gateway';
 import { currentCustomer, customerAuthMode, loginCustomer, logoutAllCustomer, logoutCustomer, registerCustomer, type CustomerProfile } from '../../infrastructure/httpCinemaGateway';
 import { ErrorState, Loading } from '../../ui/Loading';
 
 export function AccountPage() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const [mode, setMode] = useState<'loading' | 'demo' | 'customer' | 'error'>(isDemoMode ? 'demo' : 'loading');
+  const [mode, setMode] = useState<'loading' | 'customer' | 'error'>('loading');
   const [profile, setProfile] = useState<CustomerProfile | null>(null);
   const [form, setForm] = useState<'login' | 'register'>('login');
   const [email, setEmail] = useState('');
@@ -21,10 +20,8 @@ export function AccountPage() {
 
   useEffect(() => {
     let active = true;
-    if (isDemoMode) return;
-    customerAuthMode().then(async (enabled) => {
+    customerAuthMode().then(async () => {
       if (!active) return;
-      if (!enabled) { setMode('demo'); return; }
       const account = await currentCustomer();
       if (active) { setProfile(account); setMode('customer'); }
     }).catch((reason: unknown) => {
@@ -64,10 +61,9 @@ export function AccountPage() {
 
   if (mode === 'loading') return <div className="page"><Loading label="Đang kiểm tra phiên tài khoản…" /></div>;
   if (mode === 'error') return <div className="page"><ErrorState message={error} retry={() => window.location.reload()} /></div>;
-  if (mode === 'demo') return <div className="page account-page"><h1>Tài khoản của bạn</h1><p>Chế độ demo không có tài khoản khách. Hãy chạy backend với chế độ tài khoản để đăng ký và giữ chỗ bằng phiên đăng nhập.</p><Link className="button button--quiet" to="/">Xem lịch chiếu</Link></div>;
 
   return <div className="page account-page">
-    <div className="account-page__intro"><span className="data-label"><UserRound aria-hidden="true" /> TÀI KHOẢN KHÁCH</span><h1>Tài khoản của bạn</h1><p>Phiên đăng nhập được quản lý trên máy chủ. Dữ liệu phim và suất chiếu hiện vẫn là dữ liệu thử nghiệm; chưa nhận thanh toán.</p></div>
+    <div className="account-page__intro"><span className="data-label"><UserRound aria-hidden="true" /> TÀI KHOẢN KHÁCH</span><h1>Tài khoản của bạn</h1><p>Phiên đăng nhập được quản lý trên máy chủ. Lịch chiếu chỉ xuất hiện khi dữ liệu được xác thực; chưa nhận thanh toán.</p></div>
     {profile ? <section className="account-panel" aria-label="Thông tin tài khoản">
       <div className="account-panel__heading"><UserRound aria-hidden="true" /><div><h2>Đã đăng nhập</h2><p>{profile.email}</p></div></div>
       {error && <p className="message message--error" role="alert">{error}</p>}

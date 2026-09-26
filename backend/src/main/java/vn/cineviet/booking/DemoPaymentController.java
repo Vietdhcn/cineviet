@@ -18,7 +18,7 @@ import vn.cineviet.shared.ApiExceptionHandler.DomainException;
 
 @RestController
 @RequestMapping("/api/bookings")
-@ConditionalOnProperty(name = "cineviet.customer-auth-enabled", havingValue = "false", matchIfMissing = true)
+@ConditionalOnProperty(name = "cineviet.demo-enabled", havingValue = "true")
 public class DemoPaymentController {
     private final BookingService bookings;
 

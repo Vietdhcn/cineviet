@@ -42,13 +42,13 @@ export function CinemaDetailPage() {
     ? groupCinemaShowtimes(cinemaState.movies, showsState.showtimes) : [];
   if (cinemaState.kind === 'loading' || cinemaState.cinemaId !== cinemaId) return <div className="page"><Loading label="Đang tải thông tin rạp…" /></div>;
   if (cinemaState.kind === 'error') return <div className="page"><ErrorState message="Không tải được thông tin rạp. Hãy kiểm tra kết nối rồi thử lại." retry={() => { setCinemaState({ kind: 'loading' }); setReloadCinema((value) => value + 1); }} /></div>;
-  if (!cinemaState.cinema) return <div className="page"><EmptyState title="Không tìm thấy rạp" body="Địa điểm này không có trong danh sách rạp CineViet demo." action={<Link className="button button--primary" to="/rap">Xem tất cả rạp</Link>} /></div>;
+  if (!cinemaState.cinema) return <div className="page"><EmptyState title="Không tìm thấy rạp" body="Địa điểm này không có trong danh sách rạp đang hoạt động." action={<Link className="button button--primary" to="/rap">Xem tất cả rạp</Link>} /></div>;
   const cinema = cinemaState.cinema;
 
   return <div className="page cinema-detail">
     <Link className="back-link" to="/rap"><ArrowLeft aria-hidden="true" /> Tất cả rạp</Link>
     <header className="cinema-detail__header">
-      <div><span className="cinema-detail__city">{cinema.city} · Rạp DEMO</span><h1>{cinema.name}</h1><p><MapPin aria-hidden="true" />{cinema.address}, {cinema.city}</p></div>
+      <div><span className="cinema-detail__city">{cinema.city}</span><h1>{cinema.name}</h1><p><MapPin aria-hidden="true" />{cinema.address}, {cinema.city}</p></div>
       <div className="cinema-detail__cue" aria-hidden="true"><span /><span /><span /></div>
     </header>
     <section className="cinema-detail__schedule" aria-labelledby="cinema-schedule-title">

@@ -1,23 +1,19 @@
 import type { Booking, Cinema, CinemaGateway, Genre, Movie, Recommendation, Seat, Showtime } from '../domain/cinema';
 
-type ServerSession = { csrfToken: string; mode: 'customer' | 'demo' };
+type ServerSession = { csrfToken: string };
 let sessionPromise: Promise<ServerSession> | undefined;
 const serverSession = () => {
   sessionPromise ??= fetch('/api/auth/csrf', { credentials: 'include' }).then(async (authResponse) => {
     if (authResponse.ok) {
       const data = await authResponse.json() as { csrfToken: string };
-      return { csrfToken: data.csrfToken, mode: 'customer' as const };
+      return { csrfToken: data.csrfToken };
     }
-    if (authResponse.status !== 404) throw new Error('Không thể kiểm tra chế độ tài khoản trên máy chủ.');
-    const demoResponse = await fetch('/api/session', { credentials: 'include' });
-    if (!demoResponse.ok) throw new Error('Không thể khởi tạo phiên demo trên máy chủ.');
-    const data = await demoResponse.json() as { csrfToken: string };
-    return { csrfToken: data.csrfToken, mode: 'demo' as const };
+    throw new Error('Không thể kết nối dịch vụ tài khoản trên máy chủ.');
   }).catch((error: unknown) => { sessionPromise = undefined; throw error; });
   return sessionPromise;
 };
 
-export const customerAuthMode = async () => (await serverSession()).mode === 'customer';
+export const customerAuthMode = async () => { await serverSession(); return true; };
 
 export class HttpRequestError extends Error {
   constructor(message: string, readonly status: number, readonly code?: string) { super(message); }
@@ -48,13 +44,13 @@ export async function currentCustomer(): Promise<CustomerProfile | null> {
 
 export async function loginCustomer(email: string, password: string): Promise<CustomerProfile> {
   const result = await request<CustomerAuthResult>('/api/auth/login', { method: 'POST', body: JSON.stringify({ email, password }) });
-  sessionPromise = Promise.resolve({ mode: 'customer', csrfToken: result.csrfToken });
+  sessionPromise = Promise.resolve({ csrfToken: result.csrfToken });
   return { email: result.email };
 }
 
 export async function registerCustomer(email: string, password: string): Promise<CustomerProfile> {
   const result = await request<CustomerAuthResult>('/api/auth/register', { method: 'POST', body: JSON.stringify({ email, password }) });
-  sessionPromise = Promise.resolve({ mode: 'customer', csrfToken: result.csrfToken });
+  sessionPromise = Promise.resolve({ csrfToken: result.csrfToken });
   return { email: result.email };
 }
 
@@ -75,7 +71,6 @@ export class HttpCinemaGateway implements CinemaGateway {
   getShowtime(showtimeId: string) { return request<Showtime | null>(`/api/showtimes/${showtimeId}`); }
   listSeats(showtimeId: string) { return request<Seat[]>(`/api/showtimes/${showtimeId}/seats`); }
   holdSeats(showtimeId: string, seatIds: string[]) { return request<Booking>('/api/bookings/hold', { method: 'POST', headers: { 'Idempotency-Key': crypto.randomUUID() }, body: JSON.stringify({ showtimeId, seatIds }) }); }
-  confirmDemoPayment(bookingId: string, outcome: 'SUCCESS' | 'FAILED') { return request<Booking>(`/api/bookings/${bookingId}/demo-payment`, { method: 'POST', headers: { 'Idempotency-Key': crypto.randomUUID() }, body: JSON.stringify({ outcome }) }); }
   cancelBooking(bookingId: string) { return request<Booking>(`/api/bookings/${bookingId}/cancel`, { method: 'POST' }); }
   getBooking(bookingId: string) { return request<Booking | null>(`/api/bookings/${bookingId}`); }
   listBookings() { return request<Booking[]>('/api/bookings'); }

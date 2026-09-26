@@ -23,7 +23,6 @@ export interface CinemaGateway {
   getShowtime(showtimeId: string, bookingId?: string): Promise<Showtime | null>;
   listSeats(showtimeId: string): Promise<Seat[]>;
   holdSeats(showtimeId: string, seatIds: string[]): Promise<Booking>;
-  confirmDemoPayment(bookingId: string, outcome: 'SUCCESS' | 'FAILED'): Promise<Booking>;
   cancelBooking(bookingId: string): Promise<Booking>;
   getBooking(bookingId: string): Promise<Booking | null>;
   listBookings(): Promise<Booking[]>;

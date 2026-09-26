@@ -31,14 +31,14 @@ export function CinemaDirectoryPage() {
     <section className="cinema-directory__intro" aria-labelledby="cinema-directory-title">
       <div>
         <h1 id="cinema-directory-title">Tìm rạp.<br /><span>Chọn buổi chiếu.</span></h1>
-        <p>Khám phá các địa điểm CineViet trong dữ liệu demo, xem lịch chiếu theo ngày và đi thẳng tới sơ đồ ghế.</p>
+        <p>Khám phá địa điểm rạp đã được xác thực, xem lịch chiếu theo ngày và đi tới sơ đồ ghế khi dịch vụ mở bán.</p>
       </div>
       <div className="cinema-directory__aside" aria-hidden="true"><MapPin /><span>Rạp gần câu chuyện tiếp theo của bạn</span></div>
     </section>
 
     <section className="cinema-directory__browser" aria-labelledby="cinema-list-title">
       <div className="cinema-directory__toolbar">
-        <div><h2 id="cinema-list-title">Danh sách rạp</h2><p>Địa điểm và địa chỉ minh họa · DEMO</p></div>
+        <div><h2 id="cinema-list-title">Danh sách rạp</h2><p>Chỉ hiển thị địa điểm đã được xác thực</p></div>
         <div className="cinema-directory__filters">
           <label><span>Thành phố</span><select value={city} onChange={(event) => setCity(event.target.value)}><option value="">Tất cả thành phố</option>{cities.map((item) => <option key={item} value={item}>{item}</option>)}</select></label>
           <label><span>Tìm rạp hoặc địa chỉ</span><span className="cinema-directory__search"><Search aria-hidden="true" /><input type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Ví dụ: Hồ Gươm" /></span></label>

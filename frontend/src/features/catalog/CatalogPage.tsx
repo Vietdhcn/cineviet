@@ -33,10 +33,10 @@ export function CatalogPage() {
       <div className="hero__shade" />
       <div className="hero__copy">
         <h1 id="hero-title">Bộ phim tiếp theo<br />đang chờ bạn.</h1>
-        <p>Chọn suất, giữ ghế trong 5 phút và nhận vé ngay sau thanh toán mô phỏng.</p>
+        <p>Lịch chiếu và giá vé chỉ xuất hiện khi được đối tác rạp xác thực. Thanh toán sẽ được triển khai sau.</p>
         <div className="hero__actions"><a className="button button--primary" href="#lich-chieu"><Ticket aria-hidden="true" /> Chọn suất chiếu</a><Link className="button button--ghost" to="/goi-y"><Sparkles aria-hidden="true" /> Gợi ý cho tôi</Link></div>
       </div>
-      {featured && <div className="hero__feature"><span className="hero__feature-tag">Phim nổi bật · DEMO</span><strong>{featured.title}</strong><span>{featured.genres.join(' · ')} · {featured.durationMinutes} phút</span>{featuredShow && <Link to={`/dat-ghe/${featuredShow.id}`}>Suất {formatDateTime(featuredShow.startsAt)} <ArrowRight aria-hidden="true" /></Link>}</div>}
+      {featured && <div className="hero__feature"><span className="hero__feature-tag">Phim nổi bật</span><strong>{featured.title}</strong><span>{featured.genres.join(' · ')} · {featured.durationMinutes} phút</span>{featuredShow && <Link to={`/dat-ghe/${featuredShow.id}`}>Suất {formatDateTime(featuredShow.startsAt)} <ArrowRight aria-hidden="true" /></Link>}</div>}
       <div className="cue-line" aria-hidden="true"><span /><span /><span className="is-lit" /><span /></div>
     </section>
 
@@ -47,10 +47,10 @@ export function CatalogPage() {
     </section>
 
     <section className="catalog-section" aria-labelledby="now-showing-title">
-      <div className="section-heading"><div><h2 id="now-showing-title">Đang có suất</h2><p>Danh mục hư cấu dành cho bản demo học thuật.</p></div><span className="data-label"><ShieldCheck aria-hidden="true" /> Synthetic · đã duyệt</span></div>
+      <div className="section-heading"><div><h2 id="now-showing-title">Đang có suất</h2><p>Chỉ hiển thị lịch chiếu đã được xác thực.</p></div><span className="data-label"><ShieldCheck aria-hidden="true" /> Dữ liệu cần xác thực</span></div>
       {state === 'loading' && <Loading />}
       {state === 'error' && <ErrorState message="Không tải được lịch chiếu. Kiểm tra kết nối rồi thử lại." retry={load} />}
-      {state === 'ready' && visibleMovies.length === 0 && <div className="message"><strong>Chưa có suất vào ngày này.</strong><span>Hãy chọn một ngày hoặc rạp khác.</span></div>}
+      {state === 'ready' && visibleMovies.length === 0 && <div className="message"><strong>Chưa có lịch chiếu được xác thực.</strong><span>Vui lòng quay lại sau khi đối tác rạp cung cấp dữ liệu.</span></div>}
       {state === 'ready' && <div className="movie-list">{visibleMovies.map((movie, index) => {
         const movieShows = showtimes.filter((showtime) => showtime.movieId === movie.id);
         return <article className="movie-row" key={movie.id} style={{ '--delay': `${index * 70}ms` } as React.CSSProperties}>

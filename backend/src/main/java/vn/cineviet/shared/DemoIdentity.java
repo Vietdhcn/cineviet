@@ -27,7 +27,7 @@ public class DemoIdentity {
     private final boolean customerAuthEnabled;
 
     public DemoIdentity(JdbcTemplate jdbc, ObjectProvider<HttpServletRequest> requestProvider,
-                        @Value("${cineviet.customer-auth-enabled:false}") boolean customerAuthEnabled) {
+                        @Value("${cineviet.customer-auth-enabled:true}") boolean customerAuthEnabled) {
         this.jdbc = jdbc;
         this.requestProvider = requestProvider;
         this.customerAuthEnabled = customerAuthEnabled;
@@ -71,7 +71,7 @@ public class DemoIdentity {
 
 @RestController
 @RequestMapping("/api/session")
-@ConditionalOnProperty(name = "cineviet.customer-auth-enabled", havingValue = "false", matchIfMissing = true)
+@ConditionalOnProperty(name = "cineviet.demo-enabled", havingValue = "true")
 class DemoSessionController {
     private final DemoIdentity identity;
     DemoSessionController(DemoIdentity identity) { this.identity = identity; }

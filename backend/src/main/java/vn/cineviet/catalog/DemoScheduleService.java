@@ -1,12 +1,14 @@
 package vn.cineviet.catalog;
 
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /** Keeps a small, fictional catalogue bookable without changing real bookings or sold seats. */
 @Service
+@ConditionalOnProperty(name = "cineviet.demo-enabled", havingValue = "true")
 public class DemoScheduleService {
     private final JdbcTemplate jdbc;
     public DemoScheduleService(JdbcTemplate jdbc) { this.jdbc = jdbc; }

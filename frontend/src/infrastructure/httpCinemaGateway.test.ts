@@ -3,22 +3,19 @@ import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 beforeEach(() => vi.resetModules());
 afterEach(() => vi.unstubAllGlobals());
 
-it('establishes a demo session and sends CSRF and idempotency headers on a hold', async () => {
+it('fails closed when customer authentication is unavailable', async () => {
   const calls: Array<{ url: string; init: RequestInit | undefined }> = [];
   vi.stubGlobal('fetch', vi.fn(async (url: string, init?: RequestInit) => {
     calls.push({ url, init });
     if (url === '/api/auth/csrf') return new Response(null, { status: 404 });
-    if (url === '/api/session') return new Response(JSON.stringify({ csrfToken: 'session-token' }), { status: 200 });
-    return new Response(JSON.stringify({ id: 'booking-1' }), { status: 200 });
+    if (url === '/api/session') throw new Error('A demo session must never be created');
+    throw new Error(`Unexpected URL: ${url}`);
   }));
   const { HttpCinemaGateway } = await import('./httpCinemaGateway');
 
-  await new HttpCinemaGateway().holdSeats('show-1', ['seat-uuid-1']);
+  await expect(new HttpCinemaGateway().holdSeats('show-1', ['seat-uuid-1'])).rejects.toThrow();
 
-  expect(calls.map((call) => call.url)).toEqual(['/api/auth/csrf', '/api/session', '/api/bookings/hold']);
-  expect(calls[2]?.init?.credentials).toBe('include');
-  expect(calls[2]?.init?.headers).toMatchObject({ 'X-CSRF-Token': 'session-token', 'Idempotency-Key': expect.any(String) });
-  expect(JSON.parse(String(calls[2]?.init?.body))).toEqual({ showtimeId: 'show-1', seatIds: ['seat-uuid-1'] });
+  expect(calls.map((call) => call.url)).toEqual(['/api/auth/csrf']);
 });
 
 it('uses customer CSRF without creating a demo account when customer auth is enabled', async () => {
